@@ -69,6 +69,8 @@ I use STB_IMAGE for loading images into the game like .png files
 ## Assets Attributions
 - [The Sun 3d model](https://sketchfab.com/3d-models/sun-9ef1c68fbb944147bcfcc891d3912645)
 - [Astroids needs replacements](TEMP TEMP TEMP)
+- [Room Textures](https://ambientcg.com/view?id=Plaster001)
+- [Desk Textures](https://ambientcg.com/view?id=Wood051)
 - Duck by my friend Koen de graaff
 - Other Models, Shaders, Textures made are by me.
 

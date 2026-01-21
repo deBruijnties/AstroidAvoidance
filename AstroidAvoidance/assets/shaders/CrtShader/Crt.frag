@@ -3,6 +3,7 @@
 in vec3 vWorldPos;
 in vec3 vWorldNormal;
 in vec2 vUV;
+in mat3 vTBN;
 
 uniform sampler2D Texture;
 uniform sampler2D CrtScreenTexture;
@@ -21,7 +22,8 @@ void main()
     float ao = 1.0;
     vec3 emission = vec3(0.0);
 
-    vec3 normal = normalize(vWorldNormal);
+    vec3 normal = normalize(vWorldNormal);//old
+    //normal = normalize(vTBN[2]);
 
     gAlbedoMetal = vec4(albedo, metallic);
     gNormalRough = vec4(normal * 0.5 + 0.5, roughness);

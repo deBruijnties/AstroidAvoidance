@@ -159,8 +159,6 @@ void AstroidSpawner::OnUpdate()
 
         Matrix4 m = Matrix4::Identity();
         m = Math::Translate(m, a.position);
-        //m = Math::Rotate(m, Quaternion::FromAxisAngle({ 1,0,0 }, Math::Radians(a.rotation.x)));
-        //m = Math::Rotate(m, Quaternion::FromAxisAngle({ 0,1,0 }, Math::Radians(a.rotation.y)));
         m = Math::Rotate(m, Quaternion::FromEuler(Math::Radians(a.rotation)));
         m = Math::Scale(m, Vector3(a.size, a.size, a.size));
 

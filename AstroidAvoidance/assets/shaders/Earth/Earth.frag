@@ -8,6 +8,7 @@ layout (location = 2) out vec4 gEmissionAO;  // RGB = emission, A = AO
 // Material textures
 uniform sampler2D earthDay;
 uniform sampler2D earthInside;
+uniform sampler2D earthSpec;
 
 
 // Inputs
@@ -33,8 +34,9 @@ void main()
 
     vec4 dayTex = texture(earthDay, TexCoord);
     vec4 insideTex = texture(earthInside, TexCoord);
+    vec4 specTex = texture(earthSpec, TexCoord);
 
-    float roughness = 1.0;
+    float roughness = mix(0.5f,0.1f,specTex.r);
 
     vec3 normal = normalize(vWorldNormal);
 
@@ -44,6 +46,7 @@ void main()
 
     // blend inside texture into albedo
     vec3 albedo = mix(dayTex.rgb, insideTex.rgb, insideBlend);
+    roughness = mix(roughness, 1, insideBlend);
 
     vec3 emission = mix(vec3(0), insideTex.rgb, insideBlend);// * 1.25f;
 

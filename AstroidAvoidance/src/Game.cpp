@@ -25,6 +25,7 @@
 Mesh DuckMesh = Mesh::LoadMeshFromFile("assets/models/ducksmooth.obj"); // flat shaded assets/models/duck.obj
 Mesh crtMesh = Mesh::LoadMeshFromFile("Assets/models/CRT.obj");
 Mesh roomMesh = Mesh::LoadMeshFromFile("assets/models/Room.obj");
+Mesh roomDeskMesh = Mesh::LoadMeshFromFile("assets/models/Desk.obj");
 Mesh aquariumMesh = Mesh::LoadMeshFromFile("assets/models/Aquarium2.obj");
 Mesh sunMesh = Mesh::LoadMeshFromFile("assets/models/Sun.obj");
 Mesh spaceSkySphereMesh = Mesh::LoadMeshFromFile("assets/models/skysphere.obj");
@@ -38,6 +39,7 @@ Material duckMaterial;
 Material crt1Material;
 Material crt2Material;
 Material roomMaterial;
+Material roomDeskMaterial;
 Material aquariumMaterial;
 Material earthMaterial;
 Material fishIncLogoMaterial;
@@ -63,17 +65,23 @@ void Game::OnStart()
     astroidMesh.GenerateBuffers();
     fishIncLogoMesh.GenerateBuffers();
     astroidSelectionMesh.GenerateBuffers();
+	roomDeskMesh.GenerateBuffers();
+
+
+
 
     Shader* fishIncLogoShader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
     fishIncLogoMaterial = Material(fishIncLogoShader);
     fishIncLogoMaterial.SetTexture("uAlbedoMap", "assets/textures/FishLogo.png", true);
     fishIncLogoMaterial.SetBool("uUseAlbedoMap", true);
+    fishIncLogoMaterial.SetFloat("uRoughnessValue", 0.0f);
+    fishIncLogoMaterial.SetFloat("uMetallicValue", 0.25f);
 
     Shader* earthShader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/Earth/Earth.frag", true);
     earthMaterial = Material(earthShader);
     earthMaterial.SetTexture("earthInside", "assets/textures/Earth/2k_venus_surface.jpg", true);
     earthMaterial.SetTexture("earthDay", "assets/textures/Earth/2k_earth_daymap.jpg", false);
-    earthMaterial.SetTexture("earthSpec", "assets/textures/Earth/2k_earth_specular_map.tif", false);
+    earthMaterial.SetTexture("earthSpec", "assets/textures/Earth/2k_earth_specular_map.png", false);
 
 
     Shader* sunShader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
@@ -96,7 +104,7 @@ void Game::OnStart()
     spaceSkySphereMaterial.isLit = false;
 
 
-    astroidMaterial.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShaderInstanced.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShaderTest.frag", true);
+    astroidMaterial.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShaderInstanced.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
     astroidMaterial.SetTexture("uAlbedoMap", "assets/textures/Astroid/material_baseColor_Blurred.png", true);
     astroidMaterial.SetBool("uUseAlbedoMap", true);
     astroidMaterial.isLit = true;
@@ -108,8 +116,19 @@ void Game::OnStart()
 
 
     roomMaterial.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
-    roomMaterial.SetTexture("uAlbedoMap", "assets/textures/RoomTexture.png", true);
+    roomMaterial.SetTexture("uAlbedoMap", "assets/textures/Plaster001_2K-PNG/Plaster001_2K-PNG_Color.png", true);
     roomMaterial.SetBool("uUseAlbedoMap", true);
+    roomMaterial.SetTexture("uNormalMap", "assets/textures/Plaster001_2K-PNG/Plaster001_2K-PNG_NormalGL.png", true);
+    roomMaterial.SetBool("uUseNormalMap", true);
+    roomMaterial.SetFloat("uNormalIntensity", 0.25f);
+
+    roomDeskMaterial.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    roomDeskMaterial.SetTexture("uAlbedoMap", "assets/textures/Wood051_2K-PNG/Wood051_2K-PNG_Color.png", true);
+    roomDeskMaterial.SetBool("uUseAlbedoMap", true);
+    roomDeskMaterial.SetTexture("uNormalMap", "assets/textures/Wood051_2K-PNG/Wood051_2K-PNG_NormalGL.png", true);
+    roomDeskMaterial.SetBool("uUseNormalMap", true);
+    roomDeskMaterial.SetFloat("uNormalIntensity", 0.25f);
+
 
     aquariumMaterial.shader = new Shader("Assets\\shaders\\Aquarium\\Aquarium.vert", "Assets\\shaders\\Aquarium\\Aquarium.frag", true);
     aquariumMaterial.isTransparent = true;
@@ -198,8 +217,6 @@ void Game::OnStart()
         meshRenderer->mesh->GenerateBuffers();
     }
 
-
-
     GameObject* RoomLightObj = currentScene->createObject("testLight");
     RoomLightObj->transform->SetParent(roomObj->transform);
     RoomLightObj->transform->localPosition = Vector3(0, 2, 0);
@@ -207,10 +224,9 @@ void Game::OnStart()
     { // components
         PointLight* pointLight = RoomLightObj->addComponent<PointLight>();
         pointLight->color = Vector3(0.9647058823529412f, 0.8941176470588236f, 0.7372549019607844f);
-        pointLight->intensity = 0.95f;
+        pointLight->intensity = 1.95f;
         pointLight->radius = 20.0f;
     }
-
 
     GameObject* roomFishIncLogoObj = currentScene->createObject("testLight");
     roomFishIncLogoObj->transform->SetParent(roomObj->transform);
@@ -223,8 +239,16 @@ void Game::OnStart()
         meshRenderer->material = &fishIncLogoMaterial;
     }
 
-    // space scene
+    GameObject* roomDeskObj = currentScene->createObject("testLight");
+    roomDeskObj->transform->SetParent(roomObj->transform);
+    roomDeskObj->transform->MarkDirty();
+    { // components
+        MeshRenderer* meshRenderer = roomDeskObj->addComponent<MeshRenderer>();
+        meshRenderer->mesh = &roomDeskMesh;
+        meshRenderer->material = &roomDeskMaterial;
+    }
 
+    // space scene
     GameObject* CameraOrbit = currentScene->createObject("CameraOrbit");
 
     GameObject* spacecamObj = currentScene->createObject("SpaceCam");
@@ -313,8 +337,6 @@ void Game::OnStart()
         meshRenderer->mesh = &spaceSkySphereMesh;
         meshRenderer->material = &spaceSkySphereMaterial;
     }
-
-
 }
 
 float PingPong(float t)

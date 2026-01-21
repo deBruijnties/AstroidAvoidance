@@ -6,15 +6,12 @@
 
 
 
-
 ## MUST
 - Particle system  
 - Sound system
-- Tutorial ( the basics are tought by a entity with text)
-- hidden tutorial (start slow with hints of how to play)
+- (hidden)Tutorial ( the basics are tought)
 - gameplay loop
 - start menu
-- render mouse on ingame display
 - Astroid predicion
 
 

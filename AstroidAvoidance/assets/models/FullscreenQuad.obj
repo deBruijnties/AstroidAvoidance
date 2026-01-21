@@ -1,0 +1,13 @@
+v -1 -1 0
+v  1  1 0
+v -1  1 0
+v  1 -1 0
+
+vt 0 0
+vt 1 1
+vt 0 1
+vt 1 0
+
+# Faces (indices +1 because OBJ is 1-based)
+f 1/1 2/2 3/3
+f 1/1 4/4 2/2

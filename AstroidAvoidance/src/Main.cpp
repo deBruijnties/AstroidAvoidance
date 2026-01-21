@@ -2,6 +2,6 @@
 
 int main()
 {
-	Game game(400, 400, "AstroidAvoidance");
+	Game game(800, 800, "AstroidAvoidance");
 	game.Run();
 }

@@ -6,6 +6,7 @@
 #include <Core/Rendering/Buffers/StructuredBuffer.h>
 #include <Core/Scene/Components/MeshRendererInstanced.h>
 #include "EarthMeshGenerator.h"
+#include <Core/Scene/Components/ParticleSystem.h>
 
 
 class AstroidSpawner : public Component
@@ -14,7 +15,7 @@ public:
     void OnStart() override;
     void OnUpdate() override;
 
-    
+    ParticleSystem* ps;
 
     EarthMeshGenerator* earthMeshGenerator = nullptr;
     MeshRendererInstanced* meshRendererInstanced = nullptr;

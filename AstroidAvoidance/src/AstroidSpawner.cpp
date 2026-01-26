@@ -150,7 +150,7 @@ void AstroidSpawner::OnUpdate()
         a.rotation = Math::Mod(a.rotation, Vector3(360.0f, 360.0f, 360.0f));
     }
 
-    if (m_instanceBuffer->GetInstanceCount() != m_astroids.size())
+    if (m_instanceBuffer->GetCapacity() != m_astroids.size())
         m_instanceBuffer->Allocate(m_astroids.size());
 
     for (size_t i = 0; i < m_astroids.size(); ++i)
@@ -165,25 +165,32 @@ void AstroidSpawner::OnUpdate()
 
         m_instanceBuffer->Set(i, m);
     }
-    for (size_t i = 0; i < m_astroids.size(); ++i)
+    for (int i = (int)m_astroids.size() - 1; i >= 0; --i)
     {
         AstroidData& a = m_astroids[i];
-        // Collision check
+
         if (checkCollision(a))
         {
             const float halfGrid = (float)earthMeshGenerator->gridCubes * 0.5f;
-            const Vector3 centerGrid(halfGrid, halfGrid, halfGrid); 
-            const Vector3 centerWS = centerGrid * Vector3(earthMeshGenerator->scale, earthMeshGenerator->scale, earthMeshGenerator->scale);
+            const Vector3 centerGrid(halfGrid, halfGrid, halfGrid);
+            const Vector3 centerWS = centerGrid * Vector3(
+                earthMeshGenerator->scale,
+                earthMeshGenerator->scale,
+                earthMeshGenerator->scale
+            );
 
             earthMeshGenerator->carveSphereHole(centerWS + a.position, a.size * 25);
             earthMeshGenerator->marchingCubes();
 
-            // Remove asteroid safely
-            m_astroids.erase(m_astroids.begin() + i);
+            ps->baseSize = a.size;
+            ps->Burst(15, a.position);
 
-            continue;
+            // swap-remove
+            m_astroids[i] = m_astroids.back();
+            m_astroids.pop_back();
         }
     }
+
 
     m_instanceBuffer->Upload();
 

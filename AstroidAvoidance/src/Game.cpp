@@ -20,6 +20,7 @@
 #include <Core/Scene/Components/MeshRendererInstanced.h>
 #include "AstroidSpawner.h"
 #include "AstroidSelection.h"
+#include <Core/Scene/Components/ParticleSystem.h>
 
 
 Mesh DuckMesh = Mesh::LoadMeshFromFile("assets/models/ducksmooth.obj"); // flat shaded assets/models/duck.obj
@@ -51,7 +52,7 @@ FrameBuffer crtFrameBuffer;
 FrameBuffer crt2FrameBuffer;
 
 GameObject* roomAquariumDuckObj;
-
+GameObject* roomParticleTestObj;
 void Game::OnStart()
 {
     crtFrameBuffer.init(275, 275, FrameBufferFormat::RGBA8, false);
@@ -229,7 +230,7 @@ void Game::OnStart()
         pointLight->radius = 20.0f;
     }
 
-    GameObject* roomFishIncLogoObj = currentScene->createObject("testLight");
+    GameObject* roomFishIncLogoObj = currentScene->createObject("roomFishIncLogoObj");
     roomFishIncLogoObj->transform->SetParent(roomObj->transform);
     roomFishIncLogoObj->transform->localPosition = Vector3(0, 2.55f, 1.4);
     roomFishIncLogoObj->transform->localScale = Vector3(.75f, .75f, .75f);
@@ -240,7 +241,7 @@ void Game::OnStart()
         meshRenderer->material = &fishIncLogoMaterial;
     }
 
-    GameObject* roomDeskObj = currentScene->createObject("testLight");
+    GameObject* roomDeskObj = currentScene->createObject("roomDeskObj");
     roomDeskObj->transform->SetParent(roomObj->transform);
     roomDeskObj->transform->MarkDirty();
     { // components
@@ -248,6 +249,33 @@ void Game::OnStart()
         meshRenderer->mesh = &roomDeskMesh;
         meshRenderer->material = &roomDeskMaterial;
     }
+
+    roomParticleTestObj = currentScene->createObject("roomParticleTestObj");
+    roomParticleTestObj->transform->localPosition = Vector3(0, 1, 1.35);
+    roomParticleTestObj->transform->SetParent(roomObj->transform);
+    roomParticleTestObj->transform->MarkDirty();
+    { // components
+        ParticleSystem* particleSystem = roomParticleTestObj->addComponent<ParticleSystem>();
+        particleSystem->mesh = &astroidMesh;
+        particleSystem->material = &astroidMaterial;
+        particleSystem->baseAmount = 0;
+        particleSystem->baseLifeTime = 1;
+        particleSystem->baseSize = 2;
+        particleSystem->baseSpeed = 50;
+        particleSystem->randomAngularVelocity = true;
+        particleSystem->randomVelocity = true;
+        particleSystem->worldSpace = true;
+        particleSystem->loop = false;
+
+    }
+
+
+
+
+
+
+
+
 
     // space scene
     GameObject* CameraOrbit = currentScene->createObject("CameraOrbit");
@@ -288,6 +316,7 @@ void Game::OnStart()
         AstroidSpawner* spawner = spaceAstroidSpawner->addComponent<AstroidSpawner>();
         spawner->meshRendererInstanced = meshRendererInstanced;
         spawner->earthMeshGenerator = emg;
+        spawner->ps = roomParticleTestObj->getComponent<ParticleSystem>();
     }
 
     GameObject* SunOrbit = currentScene->createObject("CameraOrbit");
@@ -361,11 +390,20 @@ float SampleWaterHeight(float worldX, float worldZ, float t)
     return sin(worldX * 5.0f + t) * 0.01f
         + cos(worldZ * 5.0f + t) * 0.01f;
 }
+float val;
 
 void Game::OnUpdate()
 {
 
+    val += Time::deltaTime;
+    if (val > .9f)
+    {
+        //roomParticleTestObj->getComponent<ParticleSystem>()->Burst(10);
+        val = 0;
+    }
 
+    roomParticleTestObj->transform->localPosition.x = sin(Time::timeSinceStartup/2) * 2;
+    roomParticleTestObj->transform->MarkDirty();
 
 
 

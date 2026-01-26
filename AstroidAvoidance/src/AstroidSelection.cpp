@@ -105,10 +105,17 @@ void AstroidSelection::screenPosToWorldRay(
 
 void AstroidSelection::OnUpdate()
 {
+
 	
 
 	
 	AstroidSpawner::AstroidData* selected = spawner->GetAstroidById(m_selectedIndex);
+
+	if (selected && Input::Input::IsKeyReleased(Input::Key::Space))
+	{
+		spawner->DestroyAstroid(*selected);
+	}
+
 	if (selected != nullptr)
 	{
 		//transform.right from AstroidCam
@@ -265,7 +272,7 @@ const AstroidSpawner::AstroidData* AstroidSelection::raycast(
 	// ---------- 2. Check all asteroids ----------
 	for (auto& a : spawner->GetAstroidData())
 	{
-		float asteroidRadius = a.size * 30.0f;   // matches collision code
+		float asteroidRadius = a.size *20;   // matches collision code
 		float tHit = 0.0f;
 
 		if (!raySphere(rayOrigin, rayDir, a.position, asteroidRadius, tHit))

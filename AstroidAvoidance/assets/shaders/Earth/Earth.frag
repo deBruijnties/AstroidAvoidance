@@ -10,6 +10,9 @@ uniform sampler2D earthDay;
 uniform sampler2D earthInside;
 uniform sampler2D earthSpec;
 
+// Time for cloud scrolling
+uniform float u_Time;
+
 
 // Inputs
 in vec3 vWorldPos;
@@ -30,31 +33,35 @@ void main()
     float v = 0.5 - asin(q.y) / 3.1415926535;
     vec2 TexCoord = vec2(u, v);
 
-
-
-    vec4 dayTex = texture(earthDay, TexCoord);
+    // Sample base textures
+    vec4 dayTex    = texture(earthDay, TexCoord);
     vec4 insideTex = texture(earthInside, TexCoord);
-    vec4 specTex = texture(earthSpec, TexCoord);
+    vec4 specTex   = texture(earthSpec, TexCoord);
 
-    float roughness = mix(0.5f,0.1f,specTex.r);
-
+    // World normal
     vec3 normal = normalize(vWorldNormal);
 
-     // inside emission mask
+    // Inside emission mask
     float d = length(vWorldPos);
-    float insideBlend = 1 - clamp(smoothstep(71.5, 73.0, d),0.0,1.0);
+    float insideBlend = 1.0 - clamp(smoothstep(71.5, 73.0, d), 0.0, 1.0);
 
-    // blend inside texture into albedo
+    // Base roughness from specular map
+    float baseRoughness = mix(0.5, 0.1, specTex.r);
+
+    // Blend inside texture
     vec3 albedo = mix(dayTex.rgb, insideTex.rgb, insideBlend);
-    roughness = mix(roughness, 1, insideBlend);
 
-    vec3 emission = mix(vec3(0), insideTex.rgb, insideBlend);// * 1.25f;
+    // Clouds force roughness to 1.0
+    float roughness = baseRoughness;
 
+    // Inside also forces roughness
+    roughness = mix(roughness, 1.0, insideBlend);
 
-    gAlbedoMetal = vec4(albedo, 0);
+    // Emission
+    vec3 emission = mix(vec3(0.0), insideTex.rgb, insideBlend);
 
+    // Output to G-buffer
+    gAlbedoMetal = vec4(albedo, 0.0);
     gNormalRough = vec4(normal * 0.5 + 0.5, roughness);
-
-    gEmissionAO  = vec4(emission, 1);
-
+    gEmissionAO  = vec4(emission, 1.0);
 }

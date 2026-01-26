@@ -35,6 +35,7 @@ public:
         float eccentricity = 0.0f;
         float size = 1.0f;
     };
+    void DestroyAstroid(AstroidData& astroid);
 
     std::vector<Vector3> PredictFuturePosition(AstroidData& astroid, int secondsAhead);
 

@@ -191,6 +191,18 @@ void AstroidSpawner::OnUpdate()
 	    meshRendererInstanced->instanceBuffer = m_instanceBuffer;
 }
 
+void AstroidSpawner::DestroyAstroid(AstroidData& astroid)
+{
+    m_astroids.erase(
+        std::remove_if(
+            m_astroids.begin(),
+            m_astroids.end(),
+            [&](const AstroidData& a) { return a.id == astroid.id; }
+        ),
+        m_astroids.end()
+	);
+}
+
 std::vector<Vector3> AstroidSpawner::PredictFuturePosition(
     AstroidData& astroid,
     int secondsAhead)

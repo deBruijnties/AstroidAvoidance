@@ -82,6 +82,7 @@ void Game::OnStart()
     earthMaterial.SetTexture("earthInside", "assets/textures/Earth/2k_venus_surface.jpg", true);
     earthMaterial.SetTexture("earthDay", "assets/textures/Earth/2k_earth_daymap.jpg", false);
     earthMaterial.SetTexture("earthSpec", "assets/textures/Earth/2k_earth_specular_map.png", false);
+    earthMaterial.SetTexture("earthCloud", "assets/textures/Earth/Earth-clouds.png", false);
 
 
     Shader* sunShader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
@@ -363,6 +364,11 @@ float SampleWaterHeight(float worldX, float worldZ, float t)
 
 void Game::OnUpdate()
 {
+
+
+
+
+
     Vector2 dvdPos = GetDvdPos(Time::timeSinceStartup * 0.03f) + Vector2(0.7f, 1.1f);
 
     // Sample wave at duck position (WORLD SPACE!)

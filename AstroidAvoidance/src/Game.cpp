@@ -23,6 +23,7 @@
 #include <Core/Scene/Components/ParticleSystem.h>
 
 
+
 Mesh DuckMesh = Mesh::LoadMeshFromFile("assets/models/ducksmooth.obj"); // flat shaded assets/models/duck.obj
 Mesh crtMesh = Mesh::LoadMeshFromFile("Assets/models/CRT.obj");
 Mesh roomMesh = Mesh::LoadMeshFromFile("assets/models/Room.obj");
@@ -40,6 +41,7 @@ Material duckMaterial;
 Material crt1Material;
 Material crt2Material;
 Material roomMaterial;
+Material TestUIMaterial;
 Material roomDeskMaterial;
 Material aquariumMaterial;
 Material earthMaterial;
@@ -77,6 +79,10 @@ void Game::OnStart()
     fishIncLogoMaterial.SetBool("uUseAlbedoMap", true);
     fishIncLogoMaterial.SetFloat("uRoughnessValue", 0.0f);
     fishIncLogoMaterial.SetFloat("uMetallicValue", 0.25f);
+
+
+    Shader* TestUIShader = new Shader("assets/shaders/Test/UI_Debug.vert", "assets/shaders/Test/UI_Debug.frag", true);
+	TestUIMaterial = Material(TestUIShader);
 
     Shader* earthShader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/Earth/Earth.frag", true);
     earthMaterial = Material(earthShader);
@@ -268,8 +274,6 @@ void Game::OnStart()
         particleSystem->loop = false;
 
     }
-
-
 
 
 

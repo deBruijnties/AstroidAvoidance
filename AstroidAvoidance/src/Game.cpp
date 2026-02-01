@@ -73,7 +73,7 @@ void Game::OnStart()
 
 
 
-    Shader* fishIncLogoShader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    Shader* fishIncLogoShader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
     fishIncLogoMaterial = Material(fishIncLogoShader);
     fishIncLogoMaterial.SetTexture("uAlbedoMap", "assets/textures/FishLogo.png", true);
     fishIncLogoMaterial.SetBool("uUseAlbedoMap", true);
@@ -84,7 +84,7 @@ void Game::OnStart()
     Shader* TestUIShader = new Shader("assets/shaders/Test/UI_Debug.vert", "assets/shaders/Test/UI_Debug.frag", true);
 	TestUIMaterial = Material(TestUIShader);
 
-    Shader* earthShader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/Earth/Earth.frag", true);
+    Shader* earthShader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/Earth/Earth.frag", true);
     earthMaterial = Material(earthShader);
     earthMaterial.SetTexture("earthInside", "assets/textures/Earth/2k_venus_surface.jpg", true);
     earthMaterial.SetTexture("earthDay", "assets/textures/Earth/2k_earth_daymap.jpg", false);
@@ -92,19 +92,19 @@ void Game::OnStart()
     earthMaterial.SetTexture("earthCloud", "assets/textures/Earth/Earth-clouds.png", false);
 
 
-    Shader* sunShader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    Shader* sunShader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
     sunMaterial = Material(sunShader);
     sunMaterial.SetTexture("uEmissionMap", "assets/textures/Earth/2k_venus_surface.jpg", true);
     sunMaterial.SetBool("uUseEmissionMap", true);
     sunMaterial.SetFloat("uEmissionIntensity", 3);
 
-    Shader* duckShader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    Shader* duckShader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
     duckMaterial = Material(duckShader);
     duckMaterial.SetTexture("uAlbedoMap", "assets/textures/duck_albedo.png", true);
     duckMaterial.SetBool("uUseAlbedoMap", true);
 
 
-    spaceSkySphereMaterial.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardUnlitShader.frag", true);
+    spaceSkySphereMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardUnlitShader.frag", true);
     spaceSkySphereMaterial.SetTexture("uAlbedoMap", "assets/textures/skybox.png", true);
     spaceSkySphereMaterial.SetBool("uUseAlbedoMap", true);
     spaceSkySphereMaterial.SetTexture("uEmissionMap", "assets/textures/skyboxEmission.png", true);
@@ -112,7 +112,7 @@ void Game::OnStart()
     spaceSkySphereMaterial.isLit = false;
 
 
-    astroidMaterial.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShaderInstanced.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    astroidMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShaderInstanced.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
     astroidMaterial.SetTexture("uAlbedoMap", "assets/textures/Astroid/material_baseColor_Blurred.png", true);
     astroidMaterial.SetBool("uUseAlbedoMap", true);
     astroidMaterial.isLit = true;
@@ -122,15 +122,15 @@ void Game::OnStart()
     astroidSelectionMaterial.isLit = false;
     astroidSelectionMaterial.isTransparent = false;
 
-
-    roomMaterial.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    
+    roomMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
     roomMaterial.SetTexture("uAlbedoMap", "assets/textures/Plaster001_2K-PNG/Plaster001_2K-PNG_Color.png", true);
     roomMaterial.SetBool("uUseAlbedoMap", true);
     roomMaterial.SetTexture("uNormalMap", "assets/textures/Plaster001_2K-PNG/Plaster001_2K-PNG_NormalGL.png", true);
     roomMaterial.SetBool("uUseNormalMap", true);
     roomMaterial.SetFloat("uNormalIntensity", 0.25f);
 
-    roomDeskMaterial.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    roomDeskMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
     roomDeskMaterial.SetTexture("uAlbedoMap", "assets/textures/Wood051_2K-PNG/Wood051_2K-PNG_Color.png", true);
     roomDeskMaterial.SetBool("uUseAlbedoMap", true);
     roomDeskMaterial.SetTexture("uNormalMap", "assets/textures/Wood051_2K-PNG/Wood051_2K-PNG_NormalGL.png", true);
@@ -141,11 +141,11 @@ void Game::OnStart()
     aquariumMaterial.shader = new Shader("Assets\\shaders\\Aquarium\\Aquarium.vert", "Assets\\shaders\\Aquarium\\Aquarium.frag", true);
     aquariumMaterial.isTransparent = true;
 
-    crt1Material.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "Assets\\shaders\\CrtShader\\Crt.frag", true);
+    crt1Material.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "Assets\\shaders\\CrtShader\\Crt.frag", true);
     crt1Material.SetTexture("Texture", "Assets/textures/CRT.png", true);
     crt1Material.SetFrameBufferTexture("CrtScreenTexture", &crtFrameBuffer);
 
-    crt2Material.shader = new Shader("assets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "Assets\\shaders\\CrtShader\\Crt.frag", true);
+    crt2Material.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "Assets\\shaders\\CrtShader\\Crt.frag", true);
     crt2Material.SetTexture("Texture", "Assets/textures/CRT.png", true);
     crt2Material.SetFrameBufferTexture("CrtScreenTexture", &crt2FrameBuffer);
 

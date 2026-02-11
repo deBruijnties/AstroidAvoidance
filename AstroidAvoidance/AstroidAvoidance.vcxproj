@@ -81,6 +81,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>if exist "$(TargetDir)assets" rmdir /s /q "$(TargetDir)assets"
+xcopy /y /e /d "$(ProjectDir)assets" "$(TargetDir)assets\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -95,6 +99,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>if exist "$(TargetDir)assets" rmdir /s /q "$(TargetDir)assets"
+xcopy /y /e /d "$(ProjectDir)assets" "$(TargetDir)assets\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -110,7 +118,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /e /i /d "$(ProjectDir)assets" "$(TargetDir)assets\"</Command>
+      <Command>if exist "$(TargetDir)assets" rmdir /s /q "$(TargetDir)assets"
+xcopy /y /e /d "$(ProjectDir)assets" "$(TargetDir)assets\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,31 +138,17 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /e /i /d "$(ProjectDir)assets" "$(TargetDir)assets\"</Command>
+      <Command>if exist "$(TargetDir)assets" rmdir /s /q "$(TargetDir)assets"
+xcopy /y /e /d "$(ProjectDir)assets" "$(TargetDir)assets\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\AstroidSelection.cpp" />
-    <ClCompile Include="src\AstroidSpawner.cpp" />
-    <ClCompile Include="src\EarthMeshGenerator.cpp" />
-    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\OrbitCamLook.cpp" />
-    <ClCompile Include="src\RotateOverTime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\GalacticEngine\GalacticEngine.vcxproj">
       <Project>{2fe6acb7-c3e0-4eed-8599-6c85a960af0f}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\AstroidSelection.h" />
-    <ClInclude Include="src\AstroidSpawner.h" />
-    <ClInclude Include="src\EarthMeshGenerator.h" />
-    <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\OrbitCamLook.h" />
-    <ClInclude Include="src\RotateOverTime.h" />
-    <ClInclude Include="src\TriangleTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

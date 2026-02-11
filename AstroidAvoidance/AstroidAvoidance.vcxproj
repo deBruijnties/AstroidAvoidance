@@ -133,13 +133,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\AstroidSelection.cpp" />
-    <ClCompile Include="src\AstroidSpawner.cpp" />
-    <ClCompile Include="src\EarthMeshGenerator.cpp" />
-    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\OrbitCamLook.cpp" />
-    <ClCompile Include="src\RotateOverTime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\GalacticEngine\GalacticEngine.vcxproj">
@@ -147,13 +141,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AstroidSelection.h" />
-    <ClInclude Include="src\AstroidSpawner.h" />
-    <ClInclude Include="src\EarthMeshGenerator.h" />
-    <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\OrbitCamLook.h" />
-    <ClInclude Include="src\RotateOverTime.h" />
-    <ClInclude Include="src\TriangleTable.h" />
+    <None Include="assets\shaders\test.frag" />
+    <None Include="assets\shaders\test.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

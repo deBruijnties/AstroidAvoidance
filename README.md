@@ -18,19 +18,16 @@ Description
 Explain the gameplay in a few lines.
 
 ## Controls
-- TEMP TEMP TEMP
-List all keys the player needs:
-
-| Action | Key |
-|--------|------|
-| Move | WASD |
-| Jump | Space |
-| Look | Mouse |
-| Pause | ESC |
-| Transform | E |
+| Action            | Key                           |
+|-------------------|-------------------------------|
+| Select Astroid    | L Mouse Button                |
+| Destroy Astroid   | Space                         |
+| Look              | R Mouse Button + Mouse move   |
+| Pause             | ESC                           |
 
 ## Build Instructions
-The project compiles using **Visual Studio Community**.
+The project compiles using **Visual Studio Community 2026**.
+
 
 ## Project Structure
 - /src → C++ source files

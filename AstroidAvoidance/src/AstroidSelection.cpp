@@ -105,10 +105,6 @@ void AstroidSelection::screenPosToWorldRay(
 
 void AstroidSelection::OnUpdate()
 {
-
-	
-
-	
 	AstroidSpawner::AstroidData* selected = spawner->GetAstroidById(m_selectedIndex);
 
 	if (selected && Input::Input::IsKeyReleased(Input::Key::Space))
@@ -164,8 +160,6 @@ void AstroidSelection::OnUpdate()
 	{
 		if (Input::Mouse::buttons[0])
 		{
-			//std::cout << screenMouse.x << ".x | " << screenMouse.y << ".y\n";
-
 			Vector3 rayOrigin;
 			Vector3 rayDir; // normalized
 
@@ -216,10 +210,6 @@ void AstroidSelection::OnUpdate()
 
 }
 
-
-
-
-
 bool AstroidSelection::raySphere(
 	const Vector3& rayOrigin,
 	const Vector3& rayDir,
@@ -233,7 +223,7 @@ bool AstroidSelection::raySphere(
 	float r2 = sphereRadius * sphereRadius;
 
 	if (d2 > r2)
-		return false;           // no hit
+		return false; // no hit
 
 	float thc = sqrt(r2 - d2);
 	float t0 = tca - thc;
@@ -244,7 +234,7 @@ bool AstroidSelection::raySphere(
 	else
 		outT = t1;
 
-	return t1 >= 0.0f;          // must be in front of ray
+	return t1 >= 0.0f; // must be in front of ray
 }
 
 
@@ -257,7 +247,6 @@ const AstroidSpawner::AstroidData* AstroidSelection::raycast(
 
 	float closestDist = FLT_MAX;
 
-	// ---------- 1. Check planet intersection ----------
 	// Planet is centered at (0,0,0)
 	{
 		float tPlanet;
@@ -271,7 +260,6 @@ const AstroidSpawner::AstroidData* AstroidSelection::raycast(
 		}
 	}
 
-	// ---------- 2. Check all asteroids ----------
 	for (auto& a : spawner->GetAstroidData())
 	{
 		float asteroidRadius = a.size *20;   // matches collision code

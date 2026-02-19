@@ -20,6 +20,5 @@ void main()
     gAlbedoMetal = vec4(sunColor, 0.0f); // include alpha
     gNormalRough = vec4(normalize(vNormal),0.5f);
     gEmissionAO = vec4(texture(sunTexture, vUV).xyz * 20,0);
-    //gAlbedoMetal = vec4(1,1,0, 1.0f);
 
 }

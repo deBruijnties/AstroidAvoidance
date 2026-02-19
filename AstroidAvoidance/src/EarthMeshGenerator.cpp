@@ -21,7 +21,7 @@ void EarthMeshGenerator::OnUpdate()
 void EarthMeshGenerator::innitiateVertexValues()
 {
     // (gridCubes+1) samples on each axis
-    const float radius = planetSize * 0.5f;               // world-space radius
+    const float radius = planetSize * 0.5f; // world-space radius
     const float halfGrid = (float)gridCubes * 0.5f;
     const Vector3 centerGrid(halfGrid, halfGrid, halfGrid);
 
@@ -46,14 +46,14 @@ void EarthMeshGenerator::innitiateVertexValues()
     }
 }
 
-// Interpolates points where SDF crosses the surface (uses glm helpers)
+// Interpolates points where SDF crosses the surface
 Vector3 InterpolateEdge(const Vector3& p1, const Vector3& p2, float valP1, float valP2)
 {
     if (std::abs(valP1 - valP2) < 0.0001f)
         return p1;
 
-    float t = valP1 / (valP1 - valP2);   // interpolation factor
-    return Math::Lerp(p1, p2, t);          // GLM linear interpolation
+    float t = valP1 / (valP1 - valP2); // interpolation factor
+    return Math::Lerp(p1, p2, t); // GLM linear interpolation
 }
 
 Vector3 CalculateNormal(const Vector3& a, const Vector3& b, const Vector3& c)

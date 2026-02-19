@@ -275,12 +275,6 @@ void Game::OnStart()
 
     }
 
-
-
-
-
-
-
     // space scene
     GameObject* CameraOrbit = currentScene->createObject("CameraOrbit");
 
@@ -399,19 +393,6 @@ float val;
 
 void Game::OnUpdate()
 {
-
-    val += Time::deltaTime;
-    if (val > .9f)
-    {
-        //roomParticleTestObj->getComponent<ParticleSystem>()->Burst(10);
-        val = 0;
-    }
-
-    roomParticleTestObj->transform->localPosition.x = sin(Time::timeSinceStartup/2) * 2;
-    roomParticleTestObj->transform->MarkDirty();
-
-
-
     Vector2 dvdPos = GetDvdPos(Time::timeSinceStartup * 0.03f) + Vector2(0.7f, 1.1f);
 
     // Sample wave at duck position (WORLD SPACE!)

@@ -23,7 +23,6 @@ void main()
 
     float lightDot = clamp(dot(N, L), 0.0, 1.0);
 
-    // final night factor: 0 = day, 1 = night
     float night = 1.0 - lightDot;
 
     vec4 texColor = texture(AstroidTexture, vUV);

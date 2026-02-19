@@ -1,6 +1,5 @@
 # Buas Game Project
-
-Description
+this game is my submission for my application for BUas Creative Media and Game Technologies Programming course. its a simple game made with my own gameengine made allongside the game. all in c++ and openGL.
 
 
 ## contents
@@ -14,88 +13,74 @@ Description
 - [Story Lore](#story-lore)
 
 ## How to Play
-- TEMP TEMP TEMP
-Explain the gameplay in a few lines.
+you are a asteroid safety mannager, your job is to select astoids and destroy them, so the planet doesnt get destroyed. 
 
 ## Controls
-- TEMP TEMP TEMP
-List all keys the player needs:
-
-| Action | Key |
-|--------|------|
-| Move | WASD |
-| Jump | Space |
-| Look | Mouse |
-| Pause | ESC |
-| Transform | E |
+| Action            | Key                           |
+|-------------------|-------------------------------|
+| Select asteroid    | L Mouse Button                |
+| Destroy asteroid   | Space                         |
+| Look              | R Mouse Button + Mouse move   |
+| Pause             | ESC                           |
 
 ## Build Instructions
-The project compiles using **Visual Studio Community**.
+The project compiles using **Visual Studio Community 2026**.
+Couse visual studio doesnt allow for working directory settings (sometimes machine defined / doesnt save sometimes). you ether need to build the game and then run it from the build folder by dubble clicking the exe. or change the working directiory **(Configuration Properties -> Debugging -> Working Directory)** on **'asteroidavoidance'** project to **"$(TargetDir)**"
+
 
 ## Project Structure
-- /src → C++ source files
-- /include → Header files
-- /assets → Models, textures, audio
-- /libs → External libraries (GLFW, GLAD, etc.)
-- /shaders → GLSL shader programs
-- TEMP TEMP TEMP
+- /src > C++ source files
+- /Dependencies >  External libraries and headers (GLFW, GLAD, etc.)
+- /assets > Models, textures, audio, shaders
+- /engineassets > Models, textures, audio, shaders that my custom engine lib needs
+
 
 ## Libraries
-
 - [GLFW](#glfw)
 - [GLAD](#glad)
 - [GLM](#glm)
 - [Assimp](#assimp)
-- [ImGUI (Debug only)](#imgui-debug-only)
 - [STB_Image](#stb_image)
 
 ### GLFW
 I use GLFW for opening a window and setting up OpenGL. I also use it to get Input from the player like Mouse movements or Keyboard. And i use it for system events like resizing window etc.
-### GLAD
-I use GLAD for loading functions to opengl 4.4.
-### GLM
-I use GLM for Math opperations and types like vectors and matricies
 
+### GLAD
+I use GLAD to load opengl 4.4 functions.
+
+### GLM
+I use GLM for Math opperations and types like vectors and matricies, i made a wrapper for it so the game itself doesnt need to have any external dependencies linked (exept for the engine itself ofcourse)
 
 ### Assimp
 I use Assimp for loading 3d Models like .obj files
-
-### ImGUI (Debug only)
-I use ImGUI in debug mode for getting some debug preformance data like FPS and frameTimes.
 
 ### STB_Image
 I use STB_IMAGE for loading images into the game like .png files 
 
 ## Assets Attributions
 - [The Sun 3d model](https://sketchfab.com/3d-models/sun-9ef1c68fbb944147bcfcc891d3912645)
-- [Astroids needs replacements](TEMP TEMP TEMP)
 - [Room Textures](https://ambientcg.com/view?id=Plaster001)
 - [Desk Textures](https://ambientcg.com/view?id=Wood051)
+- [inside earth Textures](https://www.solarsystemscope.com/textures/)
+- [Earth Textures](https://www.solarsystemscope.com/textures/)
+- [Sun Textures](https://www.solarsystemscope.com/textures/)
 - Duck by my friend Koen de graaff
 - Other Models, Shaders, Textures made are by me.
 
 ## Graphical Features
-- [Bloom](https://www.youtube.com/watch?v=um9iCPUGyU4)
 - Skysphere
-
+- Deffered rendering
 
 
 ## Learning Sources
-
-- [Screen Space Reflections](https://www.youtube.com/watch?v=K2rs7K4y_sY)
 - [Learn OpenGL Bloom starting point](https://learnopengl.com/Advanced-Lighting/Bloom)
 
 ## Story Lore
-you are at work in your office at FISH office (Fast Interception & Space Hazard-avoidance) the game views are on 2 screens. One you see the planet with the astroids around it. on the other you see info about the astroid selected in the main view.
-you also have a big 'Fire' button on your desk you can press and that will blowup that astroid.
+you are at work in your office at FISH office (Fast Interception & Space Hazard-avoidance) the game views are on 2 screens. One you see the planet with the asteroids around it. on the other you see info about the asteroid selected in the main view.
+you also have a big 'Fire' button on your desk you can press and that will blowup that asteroid.
 
 ## Decor and level building
-- Fish logo looks like nasa with a fish in it.
-- office has a aquarium in it with fish boids.
+- Fish logo looks like nasa
+- office has a aquarium
 
-
-## Cut Scenes/animations
-intro animation is sitting down in a chair in the spacestation and zooming into his pov.
-
-
-# Game by Ties de Bruijn
+Made by Ties de Bruijn

@@ -32,10 +32,8 @@ void main() {
 
     vSelected = models[gl_InstanceID].selected;
 
-    // correct simple normal transform (ONLY works if no scale)
     vWorldNormal = normalize(mat3(model) * aNormal);
 
-    // world position
     vWorldPos = (model * vec4(aPos,1.0)).xyz;
 
     vUV = aUV;

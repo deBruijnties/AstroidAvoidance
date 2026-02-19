@@ -58,10 +58,6 @@ void OrbitCamLook::OnUpdate()
 
         transform->GetParent()->localRotation = Quaternion::FromEuler(euler);
 		transform->GetParent()->MarkDirty();
-   }
-	
-
-
-
+    }
 }
 

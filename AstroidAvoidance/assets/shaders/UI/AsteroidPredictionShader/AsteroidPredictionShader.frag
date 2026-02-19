@@ -17,6 +17,5 @@ void main()
     if (circle == 0.0)
         discard;
 
-    // Example output using your "value"
     gAlbedo = vec4(1, 1, 1, 1.0);
 }

@@ -21,6 +21,9 @@
 #include "AstroidSpawner.h"
 #include "AstroidSelection.h"
 #include <Core/Scene/Components/ParticleSystem.h>
+#include <Core/UI/Canvas.h>
+#include <Core/UI/TextElement.h>
+#include <Core/UI/TextureElement.h>
 
 
 
@@ -55,6 +58,9 @@ FrameBuffer crt2FrameBuffer;
 
 GameObject* roomAquariumDuckObj;
 GameObject* roomParticleTestObj;
+
+Canvas* gameOverCanvas;
+Canvas* StartCanvas;
 void Game::OnStart()
 {
     crtFrameBuffer.init(275, 275, FrameBufferFormat::RGBA8, false);
@@ -70,6 +76,7 @@ void Game::OnStart()
     astroidSelectionMesh.GenerateBuffers();
 	roomDeskMesh.GenerateBuffers();
 
+    TextureElement::Init();
 
 
 
@@ -110,6 +117,31 @@ void Game::OnStart()
     spaceSkySphereMaterial.SetTexture("uEmissionMap", "assets/textures/skyboxEmission.png", true);
     spaceSkySphereMaterial.SetBool("uUseEmissionMap", true);
     spaceSkySphereMaterial.isLit = false;
+
+    // Somewhere in your main loop / initialization:
+
+    gameOverCanvas = new Canvas();
+    {
+        Texture* buttonTexture = new Texture("assets/textures/UI/GameOver.png");
+        TextureElement* button = new TextureElement(buttonTexture);
+        button->Position = Vector2(100, 100);
+        button->Size = Vector2(200, 50);
+        gameOverCanvas->AddElement(button);
+    }
+
+    StartCanvas = new Canvas();
+    {
+        Texture* buttonTexture = new Texture("assets/textures/UI/PressToStart.png");
+        TextureElement* button = new TextureElement(buttonTexture);
+        button->Position = Vector2(100, 100);
+        button->Size = Vector2(200, 50);
+        StartCanvas->AddElement(button);
+    }
+    
+
+
+    Renderer::SetCanvas(StartCanvas);
+
 
 
     astroidMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShaderInstanced.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);

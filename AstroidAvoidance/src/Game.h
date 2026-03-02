@@ -7,7 +7,7 @@ public:
     using Engine::Engine; // Inherit Engine constructor
 
 protected:
-    void  OnStart() override;
-    void  OnUpdate() override;
-    void  OnProcessInput() override;
+    void OnStart() override;
+    void OnUpdate() override;
+    void OnProcessInput() override;
 };

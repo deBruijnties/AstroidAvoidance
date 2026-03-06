@@ -15,6 +15,8 @@ public:
     void OnStart() override;
     void OnUpdate() override;
 
+    bool Started = false;
+
     ParticleSystem* ps;
 
     EarthMeshGenerator* earthMeshGenerator = nullptr;

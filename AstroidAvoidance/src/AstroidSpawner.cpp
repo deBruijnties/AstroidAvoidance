@@ -2,6 +2,9 @@
 #include <core/Time.h>
 #include <core/Rendering/Buffers/StructuredBuffer.h>
 #include <core/engine.h>
+#include <core/Input/Input.h>
+#include <core/Input/KeyCodes.h>
+#include <core/Rendering/Renderer.h>
 #include <cstdlib>
 
 
@@ -102,6 +105,16 @@ void AstroidSpawner::OnStart()
 
 void AstroidSpawner::OnUpdate()
 {
+    if (!Started)
+    {
+        if (Started != Input::Input::IsAnyKeyPressed())
+        {
+            Started = true;
+            Renderer::SetCanvas(nullptr);
+        }
+        return;
+    }
+
     m_elapsed += Time::deltaTime;
 
     // 0 - 1 over ramp time

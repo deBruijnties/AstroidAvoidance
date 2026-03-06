@@ -22,7 +22,6 @@
 #include "AstroidSelection.h"
 #include <Core/Scene/Components/ParticleSystem.h>
 #include <Core/UI/Canvas.h>
-#include <Core/UI/TextElement.h>
 #include <Core/UI/TextureElement.h>
 
 

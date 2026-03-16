@@ -345,6 +345,7 @@ void Game::OnStart()
         AstroidSpawner* spawner = spaceAstroidSpawner->addComponent<AstroidSpawner>();
         spawner->meshRendererInstanced = meshRendererInstanced;
         spawner->earthMeshGenerator = emg;
+        spawner->gameovercanvas = gameOverCanvas;
         spawner->ps = roomParticleTestObj->getComponent<ParticleSystem>();
     }
 
@@ -444,6 +445,10 @@ void Game::OnUpdate()
         Quaternion::FromEuler(Math::Radians((Vector3(0,Time::timeSinceStartup * 18, 0))));
 
     roomAquariumDuckObj->transform->MarkDirty();
+    if (Input::Input::IsKeyDown(Input::Key::Escape))
+    {
+        Engine::Running = false;
+    }
 }
 
 void Game::OnProcessInput()

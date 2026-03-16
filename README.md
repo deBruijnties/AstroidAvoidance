@@ -13,23 +13,23 @@ this game is my submission for my application for BUas Creative Media and Game T
 - [Story Lore](#story-lore)
 
 ## How to Play
-you are a asteroid safety mannager, your job is to select astoids and destroy them, so the planet doesnt get destroyed. 
+you are a asteroid safety mannager, your job is to select astoids and destroy them, so the planet doesnt get destroyed. you do this by selecting a astroid and destroying it before it impacts earth
 
 ## Controls
 | Action            | Key                           |
 |-------------------|-------------------------------|
-| Select asteroid    | L Mouse Button                |
-| Destroy asteroid   | Space                         |
+| Select asteroid   | L Mouse Button                |
+| Destroy asteroid  | Space                         |
 | Look              | R Mouse Button + Mouse move   |
 | Pause             | ESC                           |
 
 ## Build Instructions
 The project compiles using **Visual Studio Community 2026**.
-Couse visual studio doesnt allow for working directory settings (sometimes machine defined / doesnt save sometimes). you ether need to build the game and then run it from the build folder by dubble clicking the exe. or change the working directiory **(Configuration Properties -> Debugging -> Working Directory)** on **'asteroidavoidance'** project to **"$(TargetDir)**"
+Cause visual studio doesnt allow for working directory settings (sometimes machine defined / doesnt save sometimes). you ether need to build the game (the astroidavoidance project in vs2026) and then run it from the build folder by dubble clicking the exe. or change the working directiory **(Configuration Properties -> Debugging -> Working Directory)** on **'asteroidavoidance'** project to **"$(TargetDir)"**
 
 
 ## Project Structure
-- /src > C++ source files
+- /src > C++/.h files
 - /Dependencies >  External libraries and headers (GLFW, GLAD, etc.)
 - /assets > Models, textures, audio, shaders
 - /engineassets > Models, textures, audio, shaders that my custom engine lib needs
@@ -70,14 +70,17 @@ I use STB_IMAGE for loading images into the game like .png files
 ## Graphical Features
 - Skysphere
 - Deffered rendering
-
+- basic lighting
+- instanced rendering
+- transparency
+- rendertextures
 
 ## Learning Sources
-- [Learn OpenGL Bloom starting point](https://learnopengl.com/Advanced-Lighting/Bloom)
+- [basic lighting ](https://learnopengl.com/Lighting/Basic-Lighting)
+- [Loading 3d models](https://learnopengl.com/Model-Loading/Assimp)
 
 ## Story Lore
-you are at work in your office at FISH office (Fast Interception & Space Hazard-avoidance) the game views are on 2 screens. One you see the planet with the asteroids around it. on the other you see info about the asteroid selected in the main view.
-you also have a big 'Fire' button on your desk you can press and that will blowup that asteroid.
+you are at work in your office at FISH office (Fast Interception & Space Hazard-avoidance) the game views are on 2 screens. One you see the planet with the asteroids around it. on the other you see info about the asteroid selected in the main view. you also have a button you can press and that will blowup that asteroid.
 
 ## Decor and level building
 - Fish logo looks like nasa

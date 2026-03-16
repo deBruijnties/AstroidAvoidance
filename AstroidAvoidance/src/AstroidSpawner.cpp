@@ -201,6 +201,12 @@ void AstroidSpawner::OnUpdate()
             // swap-remove
             m_astroids[i] = m_astroids.back();
             m_astroids.pop_back();
+            hits++;
+            std::cout << "hits: " << hits << "\n";
+            if (hits >= 3)
+            {
+                Renderer::SetCanvas(gameovercanvas);
+            }
         }
     }
 

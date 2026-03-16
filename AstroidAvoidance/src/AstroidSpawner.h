@@ -7,6 +7,7 @@
 #include <Core/Scene/Components/MeshRendererInstanced.h>
 #include "EarthMeshGenerator.h"
 #include <Core/Scene/Components/ParticleSystem.h>
+#include <Core/UI/Canvas.h>
 
 
 class AstroidSpawner : public Component
@@ -18,6 +19,8 @@ public:
     bool Started = false;
 
     ParticleSystem* ps;
+    int hits = 0;
+    Canvas* gameovercanvas;
 
     EarthMeshGenerator* earthMeshGenerator = nullptr;
     MeshRendererInstanced* meshRendererInstanced = nullptr;
@@ -73,7 +76,6 @@ private:
     AstroidData createRandomAstroid();
 
     bool checkCollision(AstroidData& astroid);
-
     
 
 private:

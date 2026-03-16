@@ -116,6 +116,9 @@ void AstroidSelection::OnUpdate()
 
 	if (selected != nullptr)
 	{
+		if (spawner->hits > 3) // on gameover dont allow selection of astroids
+			return;
+
 		//transform.right from AstroidCam
 		Vector3 right = Math::Normalize(AstroidCam->worldMatrix.GetColumn(0));
 	

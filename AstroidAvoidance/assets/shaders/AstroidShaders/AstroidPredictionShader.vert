@@ -23,16 +23,13 @@ void main()
     vec3 worldPos = u_Model[3].xyz;
     vUV = aUV;
 
-    // ---- A. Compute asteroid clip-space position ----
     vec4 clip = u_Projection * u_View * vec4(worldPos, 1.0);
 
     // Perspective divide for NDC
     vec2 ndc = clip.xy / clip.w;
 
-    // ---- B. Add quad vertex offset in NDC ----
     vec2 finalNdc = ndc + aPos.xy;
 
-    // ---- C. Convert back to clip-space ----
     // x and y get multiplied by w again
     float depthZ = clip.z;   // keep actual depth
     float depthW = clip.w;

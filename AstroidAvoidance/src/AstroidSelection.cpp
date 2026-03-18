@@ -18,13 +18,13 @@ bool GetCRTSurfaceUV(
 	const Matrix4& projection,
 	Vector2& outUV)
 {
-	// --- 1. CRT quad vertices from your .obj file (local model space) ---
+	// 1. CRT quad vertices from your .obj file (local model space)
 	Vector3 TL_local = Vector3(-0.3125f, 0.89985125f, -0.29094875f);
 	Vector3 BL_local = Vector3(-0.3125f, 0.277229375f, -0.34542125f);
 	Vector3 TR_local = Vector3(0.3125f, 0.89985125f, -0.29094875f);
 	Vector3 BR_local = Vector3(0.3125f, 0.277229375f, -0.34542125f);
 
-	// --- 2. Transform all quad vertices to clip space ---
+	// 2. Transform all quad vertices to clip space
 	auto ToScreen = [&](const Vector3& local) -> Vector2
 		{
 			Vector4 world = model * Vector4(local.x, local.y, local.z, 1.0);
@@ -43,7 +43,7 @@ bool GetCRTSurfaceUV(
 	Vector2 BL = ToScreen(BL_local);
 	Vector2 BR = ToScreen(BR_local);
 
-	// --- 3. Compute UV using rectangle projection ---
+	// 3. Compute UV using rectangle projection
 	Vector2 A = TL;  // origin
 	Vector2 AB = TR - TL; // horizontal axis
 	Vector2 AC = BL - TL; // vertical axis
@@ -57,7 +57,7 @@ bool GetCRTSurfaceUV(
 	if (u < 0.f || u > 1.f || v < 0.f || v > 1.f)
 		return false;
 
-	// --- 4. Convert quad UV → CRT UV region ---
+	// 4. Convert quad UV to CRT UV region
 	// Your obj UVs:
 	// U: 0.5 → 1.0
 	// V: 0.0 → 0.5
@@ -81,22 +81,18 @@ void AstroidSelection::screenPosToWorldRay(
 	Vector3& outOrigin,
 	Vector3& outDir)
 {
-	// 1. Inverse view-projection
 	Matrix4 invVP = Math::Inverse(projection * view);
 
-	// 2. Two points in clip space
 	Vector4 pNear = Vector4(ndcMouse.x, ndcMouse.y, -1.0f, 1.0f);
 	Vector4 pFar = Vector4(ndcMouse.x, ndcMouse.y, 1.0f, 1.0f);
 
-	// 3. Unproject
 	Vector4 worldNear = invVP * pNear;
 	Vector4 worldFar = invVP * pFar;
 
-	// Perspective divide
 	worldNear /= worldNear.w;
 	worldFar /= worldFar.w;
 
-	// 4. Ray definition
+	// Ray definition
 	outOrigin = Vector3(worldNear.x, worldNear.y, worldNear.z);
 	Vector4 out = worldFar - worldNear;
 	outDir = Math::Normalize(Vector3(out.x, out.y, out.z));
@@ -257,7 +253,7 @@ const AstroidSpawner::AstroidData* AstroidSelection::raycast(
 		{
 			if (tPlanet >= 0.0f)
 			{
-				// Planet blocks the ray → return nullptr immediately
+				// Planet blocks the ray to return nullptr immediately
 				return nullptr;
 			}
 		}

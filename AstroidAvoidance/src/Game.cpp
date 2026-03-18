@@ -87,8 +87,7 @@ void Game::OnStart()
     fishIncLogoMaterial.SetFloat("uMetallicValue", 0.25f);
 
 
-    Shader* TestUIShader = new Shader("assets/shaders/Test/UI_Debug.vert", "assets/shaders/Test/UI_Debug.frag", true);
-	TestUIMaterial = Material(TestUIShader);
+    
 
     Shader* earthShader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/Earth/Earth.frag", true);
     earthMaterial = Material(earthShader);
@@ -149,7 +148,7 @@ void Game::OnStart()
     astroidMaterial.isLit = true;
     astroidMaterial.isTransparent = false;
 
-    astroidSelectionMaterial.shader = new Shader("assets/shaders/AstroidShaders/AstroidSelectShader.vert", "assets/shaders/AstroidShaders/AstroidSelectShader.frag", true);
+    astroidSelectionMaterial.shader = new Shader("assets/shaders/AstroidShaders/AstroidPredictionShader.vert", "assets/shaders/AstroidShaders/AstroidPredictionShader.frag", true);
     astroidSelectionMaterial.isLit = false;
     astroidSelectionMaterial.isTransparent = false;
 
@@ -157,7 +156,6 @@ void Game::OnStart()
     roomMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
     roomMaterial.SetTexture("uAlbedoMap", "assets/textures/Plaster001_2K-PNG/Plaster001_2K-PNG_Color.png", true);
     roomMaterial.SetBool("uUseAlbedoMap", true);
-    roomMaterial.SetTexture("uNormalMap", "assets/textures/Plaster001_2K-PNG/Plaster001_2K-PNG_NormalGL.png", true);
     roomMaterial.SetBool("uUseNormalMap", true);
     roomMaterial.SetFloat("uNormalIntensity", 0.25f);
 

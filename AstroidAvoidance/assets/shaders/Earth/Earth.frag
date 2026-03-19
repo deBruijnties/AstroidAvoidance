@@ -48,6 +48,7 @@ void main()
     // Base roughness from specular map
     float baseRoughness = mix(0.5, 0.1, specTex.r);
 
+
     // Blend inside texture
     vec3 albedo = mix(dayTex.rgb, insideTex.rgb, insideBlend);
 
@@ -58,7 +59,7 @@ void main()
     roughness = mix(roughness, 1.0, insideBlend);
 
     // Emission
-    vec3 emission = mix(vec3(0.0), insideTex.rgb, insideBlend);
+    vec3 emission = mix(vec3(0.0), insideTex.rgb * 1.5, insideBlend);
 
     // Output to G-buffer
     gAlbedoMetal = vec4(albedo, 0.0);

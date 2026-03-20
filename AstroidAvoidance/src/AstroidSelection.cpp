@@ -101,7 +101,13 @@ void AstroidSelection::screenPosToWorldRay(
 
 void AstroidSelection::OnUpdate()
 {
+	if (spawner->hits > 3) // on gameover dont allow selection of astroids
+	{
+		m_selectedIndex = -1;
+		return;
+	}
 	AstroidSpawner::AstroidData* selected = spawner->GetAstroidById(m_selectedIndex);
+
 
 	if (selected && Input::Input::IsKeyReleased(Input::Key::Space))
 	{

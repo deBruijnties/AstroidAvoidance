@@ -135,6 +135,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\FishBoids.cpp" />
     <ClCompile Include="src\AstroidSelection.cpp" />
     <ClCompile Include="src\AstroidSpawner.cpp" />
     <ClCompile Include="src\EarthMeshGenerator.cpp" />
@@ -149,6 +150,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\FishBoids.h" />
     <ClInclude Include="src\AstroidSelection.h" />
     <ClInclude Include="src\AstroidSpawner.h" />
     <ClInclude Include="src\EarthMeshGenerator.h" />
@@ -157,6 +159,7 @@
     <ClInclude Include="src\RotateOverTime.h" />
     <ClInclude Include="src\TriangleTable.h" />
   </ItemGroup>
+
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -10,8 +10,6 @@ uniform sampler2D earthDay;
 uniform sampler2D earthInside;
 uniform sampler2D earthSpec;
 
-// Time for cloud scrolling
-uniform float u_Time;
 
 
 // Inputs
@@ -54,6 +52,7 @@ void main()
 
     // Clouds force roughness to 1.0
     float roughness = baseRoughness;
+    roughness = max(0.2,roughness);
 
     // Inside also forces roughness
     roughness = mix(roughness, 1.0, insideBlend);

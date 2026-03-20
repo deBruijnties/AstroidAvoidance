@@ -74,11 +74,15 @@ I use STB_IMAGE for loading images into the game like .png files
 - instanced rendering
 - transparency
 - rendertextures
+- boids
 
 ## Learning Sources
-- [basic lighting ](https://learnopengl.com/Lighting/Basic-Lighting)
+- [basic lighting](https://learnopengl.com/Lighting/Basic-Lighting)
 - [Loading 3d models](https://learnopengl.com/Model-Loading/Assimp)
 - [Dithering](https://shader-tutorial.dev/advanced/color-banding-dithering/?utm_source=chatgpt.com)
+- [boids](https://www.youtube.com/watch?v=bqtqltqcQhw)
+
+
 ## Story Lore
 you are at work in your office at FISH office (Fast Interception & Space Hazard-avoidance) the game views are on 2 screens. One you see the planet with the asteroids around it. on the other you see info about the asteroid selected in the main view. you also have a button you can press and that will blowup that asteroid.
 

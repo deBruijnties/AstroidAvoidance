@@ -23,6 +23,7 @@
 #include <Core/Scene/Components/ParticleSystem.h>
 #include <Core/UI/Canvas.h>
 #include <Core/UI/TextureElement.h>
+#include <FishBoids.h>
 
 
 
@@ -36,6 +37,7 @@ Mesh spaceSkySphereMesh = Mesh::LoadMeshFromFile("assets/models/skysphere.obj");
 Mesh astroidMesh = Mesh::LoadMeshFromFile("assets/models/AstroidSmooth.obj");
 Mesh astroidSelectionMesh = Mesh::LoadMeshFromFile("assets/models/AstroidPrediction.obj");
 Mesh fishIncLogoMesh = Mesh::LoadMeshFromFile("assets/models/FishIncLogo.obj");
+Mesh FishMesh = Mesh::LoadMeshFromFile("assets/models/fish.obj");
 
 
 Material spaceSkySphereMaterial;
@@ -74,7 +76,7 @@ void Game::OnStart()
     fishIncLogoMesh.GenerateBuffers();
     astroidSelectionMesh.GenerateBuffers();
 	roomDeskMesh.GenerateBuffers();
-
+    FishMesh.GenerateBuffers();
     TextureElement::Init();
 
 
@@ -301,6 +303,25 @@ void Game::OnStart()
         particleSystem->randomVelocity = true;
         particleSystem->worldSpace = true;
         particleSystem->loop = false;
+
+    }
+
+    GameObject* roomBoidFishes = currentScene->createObject("FISHH");
+    roomBoidFishes->transform->localPosition = Vector3(0,.25f,0);
+    roomBoidFishes->transform->localScale = Vector3(1.0f,.35f,.1f);
+    roomBoidFishes->transform->SetParent(roomAquariumObj->transform);
+    roomBoidFishes->transform->MarkDirty();
+    { // components
+        MeshRendererInstanced* BoidRenderer = roomBoidFishes->addComponent<MeshRendererInstanced>();
+        BoidRenderer->mesh = &FishMesh;
+        BoidRenderer->material = &astroidMaterial;
+
+
+        FishBoids* Boids = roomBoidFishes->addComponent<FishBoids>();
+        Boids->Renderer = BoidRenderer;
+        Boids->fishCount = 30;
+        Boids->boundsMin = {-0.3f,-0.5f,-0.5f };
+        Boids->boundsMax = { 0.5f,0.45f,0.5f };
 
     }
 

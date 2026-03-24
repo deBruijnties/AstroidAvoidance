@@ -4,6 +4,10 @@
 class MeshRenderer;
 class Mesh;
 
+// this script generates the planet based on a 3d point sphere function
+// using the marchingcubes algorithm i generate a mesh based on the vertexvalues
+// this class also contains the function to carve holes into the mesh vertexdata and then updates mesh.
+
 class EarthMeshGenerator : public Component
 {
 public:
@@ -18,7 +22,6 @@ private:
 
 
     void OnStart() override;
-    void OnUpdate() override;
 
     MeshRenderer* mr;
 

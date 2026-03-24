@@ -13,9 +13,6 @@ void EarthMeshGenerator::OnStart()
 	marchingCubes();
 }
 
-void EarthMeshGenerator::OnUpdate()
-{
-}
 
 
 void EarthMeshGenerator::innitiateVertexValues()
@@ -52,8 +49,8 @@ Vector3 InterpolateEdge(const Vector3& p1, const Vector3& p2, float valP1, float
     if (std::abs(valP1 - valP2) < 0.0001f)
         return p1;
 
-    float t = valP1 / (valP1 - valP2); // interpolation factor
-    return Math::Lerp(p1, p2, t); // GLM linear interpolation
+    float t = valP1 / (valP1 - valP2);
+    return Math::Lerp(p1, p2, t);
 }
 
 Vector3 CalculateNormal(const Vector3& a, const Vector3& b, const Vector3& c)
@@ -200,6 +197,7 @@ void EarthMeshGenerator::marchingCubes()
     mr->mesh = planetMesh;
 }
 
+//carve and regen the vertexvalues of the planet
 void EarthMeshGenerator::carveSphereHole(const Vector3& sphereCenter, float radius)
 {
     const int size = gridCubes + 1;

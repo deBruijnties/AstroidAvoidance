@@ -4,23 +4,25 @@
 #include <Core/Scene/Components/Transform.h>
 #include <iostream>
 
+// angles
 float camYaw = 0.0f;
 float camPitch = 0.0f;
+// zoom (distance from camera)
 float camZoom = 250.0f;
 
 void OrbitCamLook::OnStart()
 {
-    //sets origon obj rotation 
+    // sets origon obj rotation 
     transform->localPosition = Vector3(0, 0, camZoom);
     // Apply rotation to the parent (orgion)
     Vector3 euler = Math::Radians(Vector3(camPitch, camYaw, 0.0f));
-
 
     if (transform->GetParent() == nullptr)
     {
         std::cout << "No parent set\n";
     }
 
+    //set the base rotation and set transform to update
     transform->GetParent()->localRotation = Quaternion::FromEuler(euler);
     transform->GetParent()->MarkDirty();
 }
@@ -29,8 +31,7 @@ void OrbitCamLook::OnUpdate()
 {
     Vector2 d = Input::Mouse::delta;
 
-
-	// Right-mouse button check for orbiting
+	// Right mouse button check for orbiting
     if (Input::Mouse::buttons[1])
     {
         camYaw -= d.x * 0.3f;
@@ -56,6 +57,7 @@ void OrbitCamLook::OnUpdate()
             std::cout << "No parent set\n";
         }
 
+        //set the rotation and set transform to update
         transform->GetParent()->localRotation = Quaternion::FromEuler(euler);
 		transform->GetParent()->MarkDirty();
     }

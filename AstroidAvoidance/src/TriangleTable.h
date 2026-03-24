@@ -1,4 +1,6 @@
 #pragma once
+// Trianglation Table for marchingcubes algorithm
+// used in the algorithm for the connection of edgepoints in the current cube
 int triangle_table[256][16] =
 {
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},

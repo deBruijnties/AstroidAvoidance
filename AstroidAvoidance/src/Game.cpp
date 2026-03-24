@@ -24,6 +24,7 @@
 #include <Core/UI/Canvas.h>
 #include <Core/UI/TextureElement.h>
 #include <FishBoids.h>
+#include <DuckBounce.h>
 
 
 
@@ -243,6 +244,7 @@ void Game::OnStart()
         MeshRenderer* meshRenderer = roomAquariumDuckObj->addComponent<MeshRenderer>();
         meshRenderer->mesh = &DuckMesh;
         meshRenderer->material = &duckMaterial;
+        DuckBounce* duck = roomAquariumDuckObj->addComponent<DuckBounce>();
     }
 
     GameObject* roomModelObj = currentScene->createObject("roomObj");
@@ -419,57 +421,12 @@ void Game::OnStart()
     }
 }
 
-float PingPong(float t)
-{
-    return 1.0f - std::abs(std::fmod(t, 2.0f) - 1.0f);
-}
 
-Vector2 GetDvdPos(float time)
-{
-    float sx = 1.0f;
-    float sz = 1.37f;
-
-    float x = PingPong(time * sx) * 0.7f; // 0 - 0.7
-    float z = PingPong(time * sz) * 0.3f; // 0 - 0.3
-
-    return { x, z };
-}
-
-float SampleWaterHeight(float worldX, float worldZ, float t)
-{
-    return sin(worldX * 5.0f + t) * 0.01f
-        + cos(worldZ * 5.0f + t) * 0.01f;
-}
-float val;
 
 void Game::OnUpdate()
 {
-    Vector2 dvdPos = GetDvdPos(Time::timeSinceStartup * 0.03f) + Vector2(0.7f, 1.1f);
-
-    // Sample wave at duck position (WORLD SPACE!)
-    float t = Time::timeSinceStartup;
-    float waterHeight = SampleWaterHeight(dvdPos.x, dvdPos.y, t);
-
-    // Base water plane height in world space
-    float waterBaseY = 1.440f;
-
-    // Final duck height
-    float duckY = waterBaseY + waterHeight;
-
-    // Apply position
-    roomAquariumDuckObj->transform->localPosition =
-        Vector3(dvdPos.x, duckY, dvdPos.y);
-
-    roomAquariumDuckObj->transform->localRotation =
-        Quaternion::FromEuler(Math::Radians((Vector3(0,Time::timeSinceStartup * 18, 0))));
-
-    roomAquariumDuckObj->transform->MarkDirty();
     if (Input::Input::IsKeyDown(Input::Key::Escape))
     {
         Engine::Running = false;
     }
-}
-
-void Game::OnProcessInput()
-{
 }

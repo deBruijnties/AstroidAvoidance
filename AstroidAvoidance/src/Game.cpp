@@ -27,8 +27,8 @@
 #include <DuckBounce.h>
 
 
-
-Mesh DuckMesh = Mesh::LoadMeshFromFile("assets/models/ducksmooth.obj"); // flat shaded assets/models/duck.obj
+// loading mesh data
+Mesh DuckMesh = Mesh::LoadMeshFromFile("assets/models/ducksmooth.obj"); 
 Mesh crtMesh = Mesh::LoadMeshFromFile("Assets/models/CRT.obj");
 Mesh roomMesh = Mesh::LoadMeshFromFile("assets/models/Room.obj");
 Mesh roomDeskMesh = Mesh::LoadMeshFromFile("assets/models/Desk.obj");
@@ -40,7 +40,7 @@ Mesh astroidSelectionMesh = Mesh::LoadMeshFromFile("assets/models/AstroidPredict
 Mesh fishIncLogoMesh = Mesh::LoadMeshFromFile("assets/models/FishIncLogo.obj");
 Mesh FishMesh = Mesh::LoadMeshFromFile("assets/models/fish.obj");
 
-
+// defining materials
 Material spaceSkySphereMaterial;
 Material duckMaterial;
 Material crt1Material;
@@ -55,18 +55,21 @@ Material sunMaterial;
 Material astroidMaterial;
 Material astroidSelectionMaterial;
 
+// defining Framebuffers
 FrameBuffer crtFrameBuffer;
 FrameBuffer crt2FrameBuffer;
 
-GameObject* roomAquariumDuckObj;
-GameObject* roomParticleTestObj;
-
+// defining canvas
 Canvas* gameOverCanvas;
 Canvas* StartCanvas;
+
 void Game::OnStart()
 {
+    // innitialize framebuffers for the crt screens in game
     crtFrameBuffer.init(275, 275, FrameBufferFormat::RGBA8, false);
     crt2FrameBuffer.init(275, 275, FrameBufferFormat::RGBA8, false);
+
+    // loading mesh into buffers on GPU
     crtMesh.GenerateBuffers();
     roomMesh.GenerateBuffers();
     DuckMesh.GenerateBuffers();
@@ -78,39 +81,32 @@ void Game::OnStart()
     astroidSelectionMesh.GenerateBuffers();
 	roomDeskMesh.GenerateBuffers();
     FishMesh.GenerateBuffers();
+
+    // innitializing TextureElement
     TextureElement::Init();
 
 
-
-    Shader* fishIncLogoShader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
-    fishIncLogoMaterial = Material(fishIncLogoShader);
+    // initializing materials
+    fishIncLogoMaterial = Material(new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true));
     fishIncLogoMaterial.SetTexture("uAlbedoMap", "assets/textures/FishLogo.png", true);
     fishIncLogoMaterial.SetBool("uUseAlbedoMap", true);
     fishIncLogoMaterial.SetFloat("uRoughnessValue", 0.0f);
     fishIncLogoMaterial.SetFloat("uMetallicValue", 0.25f);
 
-
-    
-
-    Shader* earthShader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/Earth/Earth.frag", true);
-    earthMaterial = Material(earthShader);
+    earthMaterial = Material(new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "assets/shaders/Earth/Earth.frag", true));
     earthMaterial.SetTexture("earthInside", "assets/textures/Earth/2k_venus_surface.jpg", true);
     earthMaterial.SetTexture("earthDay", "assets/textures/Earth/2k_earth_daymap.jpg", false);
     earthMaterial.SetTexture("earthSpec", "assets/textures/Earth/2k_earth_specular_map.png", false);
     earthMaterial.SetTexture("earthCloud", "assets/textures/Earth/Earth-clouds.png", false);
 
-
-    Shader* sunShader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
-    sunMaterial = Material(sunShader);
+    sunMaterial = Material(new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true));
     sunMaterial.SetTexture("uEmissionMap", "assets/textures/Earth/2k_venus_surface.jpg", true);
     sunMaterial.SetBool("uUseEmissionMap", true);
     sunMaterial.SetFloat("uEmissionIntensity", 3);
 
-    Shader* duckShader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
-    duckMaterial = Material(duckShader);
+    duckMaterial = Material(new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true));
     duckMaterial.SetTexture("uAlbedoMap", "assets/textures/duck_albedo.png", true);
     duckMaterial.SetBool("uUseAlbedoMap", true);
-
 
     spaceSkySphereMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardUnlitShader.frag", true);
     spaceSkySphereMaterial.SetTexture("uAlbedoMap", "assets/textures/skybox.png", true);
@@ -119,8 +115,43 @@ void Game::OnStart()
     spaceSkySphereMaterial.SetBool("uUseEmissionMap", true);
     spaceSkySphereMaterial.isLit = false;
 
-    // Somewhere in your main loop / initialization:
+    astroidMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShaderInstanced.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    astroidMaterial.SetTexture("uAlbedoMap", "assets/textures/Astroid/material_baseColor_Blurred.png", true);
+    astroidMaterial.SetBool("uUseAlbedoMap", true);
+    astroidMaterial.isLit = true;
+    astroidMaterial.isTransparent = false;
 
+    astroidSelectionMaterial.shader = new Shader("assets/shaders/AstroidShaders/AstroidPredictionShader.vert", "assets/shaders/AstroidShaders/AstroidPredictionShader.frag", true);
+    astroidSelectionMaterial.isLit = false;
+    astroidSelectionMaterial.isTransparent = false;
+
+    roomMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    roomMaterial.SetTexture("uAlbedoMap", "assets/textures/Plaster001_2K-PNG/Plaster001_2K-PNG_Color.png", true);
+    roomMaterial.SetBool("uUseAlbedoMap", true);
+    roomMaterial.SetBool("uUseNormalMap", true);
+    roomMaterial.SetFloat("uNormalIntensity", 0.25f);
+
+    roomDeskMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
+    roomDeskMaterial.SetTexture("uAlbedoMap", "assets/textures/Wood051_2K-PNG/Wood051_2K-PNG_Color.png", true);
+    roomDeskMaterial.SetBool("uUseAlbedoMap", true);
+    roomDeskMaterial.SetTexture("uNormalMap", "assets/textures/Wood051_2K-PNG/Wood051_2K-PNG_NormalGL.png", true);
+    roomDeskMaterial.SetBool("uUseNormalMap", true);
+    roomDeskMaterial.SetFloat("uNormalIntensity", 0.25f);
+
+    aquariumMaterial.shader = new Shader("Assets\\shaders\\Aquarium\\Aquarium.vert", "Assets\\shaders\\Aquarium\\Aquarium.frag", true);
+    aquariumMaterial.isTransparent = true;
+
+    crt1Material.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "Assets\\shaders\\CrtShader\\Crt.frag", true);
+    crt1Material.SetTexture("Texture", "Assets/textures/CRT.png", true);
+    crt1Material.SetFrameBufferTexture("CrtScreenTexture", &crtFrameBuffer);
+
+    crt2Material.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "Assets\\shaders\\CrtShader\\Crt.frag", true);
+    crt2Material.SetTexture("Texture", "Assets/textures/CRT.png", true);
+    crt2Material.SetFrameBufferTexture("CrtScreenTexture", &crt2FrameBuffer);
+
+
+
+    // canvas innitialization
     gameOverCanvas = new Canvas();
     {
         Texture* buttonTexture = new Texture("assets/textures/UI/GameOver.png");
@@ -140,51 +171,17 @@ void Game::OnStart()
     }
     
 
-
+    // set start canvas to camera
     Renderer::SetCanvas(StartCanvas);
 
 
 
-    astroidMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShaderInstanced.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
-    astroidMaterial.SetTexture("uAlbedoMap", "assets/textures/Astroid/material_baseColor_Blurred.png", true);
-    astroidMaterial.SetBool("uUseAlbedoMap", true);
-    astroidMaterial.isLit = true;
-    astroidMaterial.isTransparent = false;
-
-    astroidSelectionMaterial.shader = new Shader("assets/shaders/AstroidShaders/AstroidPredictionShader.vert", "assets/shaders/AstroidShaders/AstroidPredictionShader.frag", true);
-    astroidSelectionMaterial.isLit = false;
-    astroidSelectionMaterial.isTransparent = false;
-
-    
-    roomMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
-    roomMaterial.SetTexture("uAlbedoMap", "assets/textures/Plaster001_2K-PNG/Plaster001_2K-PNG_Color.png", true);
-    roomMaterial.SetBool("uUseAlbedoMap", true);
-    roomMaterial.SetBool("uUseNormalMap", true);
-    roomMaterial.SetFloat("uNormalIntensity", 0.25f);
-
-    roomDeskMaterial.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.frag", true);
-    roomDeskMaterial.SetTexture("uAlbedoMap", "assets/textures/Wood051_2K-PNG/Wood051_2K-PNG_Color.png", true);
-    roomDeskMaterial.SetBool("uUseAlbedoMap", true);
-    roomDeskMaterial.SetTexture("uNormalMap", "assets/textures/Wood051_2K-PNG/Wood051_2K-PNG_NormalGL.png", true);
-    roomDeskMaterial.SetBool("uUseNormalMap", true);
-    roomDeskMaterial.SetFloat("uNormalIntensity", 0.25f);
-
-
-    aquariumMaterial.shader = new Shader("Assets\\shaders\\Aquarium\\Aquarium.vert", "Assets\\shaders\\Aquarium\\Aquarium.frag", true);
-    aquariumMaterial.isTransparent = true;
-
-    crt1Material.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "Assets\\shaders\\CrtShader\\Crt.frag", true);
-    crt1Material.SetTexture("Texture", "Assets/textures/CRT.png", true);
-    crt1Material.SetFrameBufferTexture("CrtScreenTexture", &crtFrameBuffer);
-
-    crt2Material.shader = new Shader("engineassets/shaders/StandardGeometryStageShader/StandardGeometryStageShader.vert", "Assets\\shaders\\CrtShader\\Crt.frag", true);
-    crt2Material.SetTexture("Texture", "Assets/textures/CRT.png", true);
-    crt2Material.SetFrameBufferTexture("CrtScreenTexture", &crt2FrameBuffer);
-
+   
+    // innitialize Scene
     currentScene = new Scene();
 
 
-    // room scene
+    // room obj's
     GameObject* roomObj = currentScene->createObject("room");
     roomObj->transform->localPosition = Vector3(-10000, 0, 0);
     roomObj->transform->MarkDirty();
@@ -203,7 +200,7 @@ void Game::OnStart()
 
     GameObject* roomCrt1Obj = currentScene->createObject("roomCrt1Obj");
     roomCrt1Obj->transform->SetParent(roomObj->transform);
-    roomCrt1Obj->transform->localPosition = Vector3(0, 1, 1.35);
+    roomCrt1Obj->transform->localPosition = Vector3(0, 1, 1.35f);
     roomCrt1Obj->transform->MarkDirty();
     { // components
         MeshRenderer* meshRenderer = roomCrt1Obj->addComponent<MeshRenderer>();
@@ -214,7 +211,7 @@ void Game::OnStart()
 
     GameObject* roomCrt2Obj = currentScene->createObject("roomCrt2Obj");
     roomCrt2Obj->transform->SetParent(roomObj->transform);
-    roomCrt2Obj->transform->localPosition = Vector3(-1, 1, 1.3);
+    roomCrt2Obj->transform->localPosition = Vector3(-1, 1, 1.3f);
     roomCrt2Obj->transform->localRotation = Quaternion::FromEuler(Math::Radians(Vector3(0, -20, 0)));
     roomCrt2Obj->transform->MarkDirty();
     { // components
@@ -226,7 +223,7 @@ void Game::OnStart()
 
     GameObject* roomAquariumObj = currentScene->createObject("roomAquariumObj");
     roomAquariumObj->transform->SetParent(roomObj->transform);
-    roomAquariumObj->transform->localPosition = Vector3(1, 1, 1.2);
+    roomAquariumObj->transform->localPosition = Vector3(1.f, 1.0f, 1.2f);
     roomAquariumObj->transform->MarkDirty();
     { // components
         MeshRenderer* meshRenderer = roomAquariumObj->addComponent<MeshRenderer>();
@@ -235,9 +232,9 @@ void Game::OnStart()
         meshRenderer->mesh->GenerateBuffers();
     }
 
-    roomAquariumDuckObj = currentScene->createObject("testLight");
+    GameObject* roomAquariumDuckObj = currentScene->createObject("testLight");
     roomAquariumDuckObj->transform->SetParent(roomObj->transform);
-    roomAquariumDuckObj->transform->localPosition = Vector3(1.4f, 1.5f, 1.4);
+    roomAquariumDuckObj->transform->localPosition = Vector3(1.4f, 1.5f, 1.4f);
     roomAquariumDuckObj->transform->localScale = Vector3(.3f, .3f, .3f);
     roomAquariumDuckObj->transform->MarkDirty();
     { // components
@@ -271,7 +268,7 @@ void Game::OnStart()
 
     GameObject* roomFishIncLogoObj = currentScene->createObject("roomFishIncLogoObj");
     roomFishIncLogoObj->transform->SetParent(roomObj->transform);
-    roomFishIncLogoObj->transform->localPosition = Vector3(0, 2.55f, 1.4);
+    roomFishIncLogoObj->transform->localPosition = Vector3(0, 2.55f, 1.4f);
     roomFishIncLogoObj->transform->localScale = Vector3(.75f, .75f, .75f);
     roomFishIncLogoObj->transform->MarkDirty();
     { // components
@@ -289,8 +286,8 @@ void Game::OnStart()
         meshRenderer->material = &roomDeskMaterial;
     }
 
-    roomParticleTestObj = currentScene->createObject("roomParticleTestObj");
-    roomParticleTestObj->transform->localPosition = Vector3(0, 1, 1.35);
+    GameObject* roomParticleTestObj = currentScene->createObject("roomParticleTestObj");
+    roomParticleTestObj->transform->localPosition = Vector3(0.0f, 1.0f, 1.35f);
     roomParticleTestObj->transform->SetParent(roomObj->transform);
     roomParticleTestObj->transform->MarkDirty();
     { // components
@@ -327,7 +324,7 @@ void Game::OnStart()
 
     }
 
-    // space scene
+    // space obj's
     GameObject* CameraOrbit = currentScene->createObject("CameraOrbit");
 
     GameObject* spacecamObj = currentScene->createObject("SpaceCam");
@@ -408,13 +405,12 @@ void Game::OnStart()
         astroidSelection->roomCam = roomCamObj->transform;
         astroidSelection->AstroidCam = spaceAstroidcamObj->transform;
         astroidSelection->SunObj = spaceSun->transform;
-
     }
 
     GameObject* spaceSkySphere = currentScene->createObject("spaceSkySphere");
     spaceSkySphere->transform->localScale = Vector3(2,2,2);
     spaceSkySphere->transform->MarkDirty();
-    { // components
+    {
         MeshRenderer* meshRenderer = spaceSkySphere->addComponent<MeshRenderer>();
         meshRenderer->mesh = &spaceSkySphereMesh;
         meshRenderer->material = &spaceSkySphereMaterial;
@@ -422,9 +418,9 @@ void Game::OnStart()
 }
 
 
-
 void Game::OnUpdate()
 {
+    // escape closes the game
     if (Input::Input::IsKeyDown(Input::Key::Escape))
     {
         Engine::Running = false;

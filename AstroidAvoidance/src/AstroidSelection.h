@@ -6,18 +6,18 @@
 class AstroidSelection : public Component
 {
 public:
-	MeshRendererInstanced* meshRendererInstanced;
-    AstroidSpawner* spawner;
-    Camera* spaceCam;
-    EarthMeshGenerator* earthGen;
-    Transform* crt;
-    Transform* roomCam;
-    Transform* AstroidCam;
-    Transform* SunObj;
+	MeshRendererInstanced* meshRendererInstanced = nullptr;
+    AstroidSpawner* spawner = nullptr;
+    Camera* spaceCam = nullptr;
+    EarthMeshGenerator* earthGen = nullptr;
+    Transform* crt = nullptr;
+    Transform* roomCam = nullptr;
+    Transform* AstroidCam = nullptr;
+    Transform* SunObj = nullptr;
 
-    ParticleSystem* ps;
+    ParticleSystem* ps = nullptr;
     
-    int m_selectedIndex;
+    int m_selectedIndex = -1;
 
     void OnStart() override;
     void screenPosToWorldRay(const Vector2& ndcMouse, const Matrix4& view, const Matrix4& projection, Vector3& outOrigin, Vector3& outDir);

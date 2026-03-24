@@ -7,8 +7,8 @@ public:
     using Engine::Engine; // Inherit Engine constructor
 
 protected:
-    //innit game
+    // innit game
     void OnStart() override;
-    //update game
+    // update game
     void OnUpdate() override;
 };

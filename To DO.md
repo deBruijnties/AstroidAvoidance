@@ -1,18 +1,20 @@
 ## Must
-- gameplay loop
-- start menu
+- Sound system
 
 ## Want
 - (hidden)Tutorial ( the basics are tought)
-- Sound system
-- fish boids
 - Starting anitmaion (intro animation is sitting down in a chair in the spacestation and zooming into his pov.)
 - [atmosphere Volumatric](https://www.youtube.com/watch?v=DxfEbulyFcY)
-- UI system
+
 
 ## Eventially MAYBE
-- Gamepad support 
 - Mobile Port
+
+## Partially
+- UI system
+- gameplay loop
+- start menu
+- fish boids (needs animation)
 
 ## Done
 - Particle system  

@@ -18,16 +18,16 @@ public:
 
     bool Started = false;
 
-    ParticleSystem* ps;
+    ParticleSystem* ps = nullptr;
     int hits = 0;
-    Canvas* gameovercanvas;
+    Canvas* gameovercanvas = nullptr;
 
     EarthMeshGenerator* earthMeshGenerator = nullptr;
     MeshRendererInstanced* meshRendererInstanced = nullptr;
 
     struct AstroidData
     {
-        uint64_t id = 0;
+        int id = 0;
 
         Vector3 position{};
         Vector3 rotation{};
@@ -66,11 +66,11 @@ private:
     // Difficulty curve
     float m_minAsteroids = 2.0f;
     float m_maxAsteroids = 200.0f;
-    float m_rampUpTime = 300.0f; // seconds to reach max (5 min)
+    float m_rampUpTime = 300.0f;
 
     float m_spawnAccumulator = 0.0f;
-    float m_spawnPerSecondMin = 0.2f;  // very slow at start
-    float m_spawnPerSecondMax = 5.0f;  // late game chaos
+    float m_spawnPerSecondMin = 0.2f;
+    float m_spawnPerSecondMax = 5.0f;
 
 
     AstroidData createRandomAstroid();
@@ -83,5 +83,5 @@ private:
 
     StructuredBuffer* m_instanceBuffer = nullptr;
 
-    uint64_t m_nextAstroidId = 1;
+    int m_nextAstroidId = 1;
 };

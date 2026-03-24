@@ -75,6 +75,9 @@ I use STB_IMAGE for loading images into the game like .png files
 - transparency
 - rendertextures
 - boids
+- Multicamera Rendering
+- Basic UI
+- bloom
 
 ## Learning Sources
 - [basic lighting](https://learnopengl.com/Lighting/Basic-Lighting)
@@ -88,6 +91,6 @@ you are at work in your office at FISH office (Fast Interception & Space Hazard-
 
 ## Decor and level building
 - Fish logo looks like nasa
-- office has a aquarium
+- office has a aquarium with fishes in it
 
 Made by Ties de Bruijn

@@ -149,8 +149,8 @@ void AstroidSelection::OnUpdate()
 	bool hit = GetCRTSurfaceUV(
 		Input::Mouse::position.x,
 		Input::Mouse::position.y,
-		Engine::width,
-		Engine::height,
+		(float)Engine::width,
+		(float)Engine::height,
 
 		crt->worldMatrix, // MODEL
 
@@ -206,7 +206,7 @@ void AstroidSelection::OnUpdate()
 		Matrix4 m = Matrix4::Identity();
 		m = Math::Translate(m, pos[i]);
 		
-		m = Math::Scale(m, Vector3(.1, .1, .1));
+		m = Math::Scale(m, Vector3(.1f, .1f, .1f));
 		m_instanceBuffer->Set(i, m);
 
 	}
@@ -267,7 +267,7 @@ const AstroidSpawner::AstroidData* AstroidSelection::raycast(
 
 	for (auto& a : spawner->GetAstroidData())
 	{
-		float asteroidRadius = a.size *20;   // matches collision code
+		float asteroidRadius = a.size * 20;   // matches collision code
 		float tHit = 0.0f;
 
 		if (!raySphere(rayOrigin, rayDir, a.position, asteroidRadius, tHit))

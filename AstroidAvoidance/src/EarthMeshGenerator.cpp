@@ -128,14 +128,14 @@ void EarthMeshGenerator::marchingCubes()
                     continue;
 
                 Vector3 P[8] = {
-                    Vector3(x,     y,     z),
-                    Vector3(x + 1, y,     z),
-                    Vector3(x + 1, y,     z + 1),
-                    Vector3(x,     y,     z + 1),
-                    Vector3(x,     y + 1, z),
-                    Vector3(x + 1, y + 1, z),
-                    Vector3(x + 1, y + 1, z + 1),
-                    Vector3(x,     y + 1, z + 1)
+                    Vector3((float)x,     (float)y,     (float)z),
+                    Vector3((float)x + 1, (float)y,     (float)z),
+                    Vector3((float)x + 1, (float)y,     (float)z + 1),
+                    Vector3((float)x,     (float)y,     (float)z + 1),
+                    Vector3((float)x,     (float)y + 1, (float)z),
+                    Vector3((float)x + 1, (float)y + 1, (float)z),
+                    Vector3((float)x + 1, (float)y + 1, (float)z + 1),
+                    Vector3((float)x,     (float)y + 1, (float)z + 1)
                 };
 
                 Vector3 E[12] = {
@@ -209,7 +209,7 @@ void EarthMeshGenerator::carveSphereHole(const Vector3& sphereCenter, float radi
             for (int z = 0; z < size; z++)
             {
                 // Convert voxel index to world space
-                Vector3 pWS = Vector3(x, y, z) * Vector3(scale, scale, scale);
+                Vector3 pWS = Vector3((float)x, (float)y, (float)z) * Vector3((float)scale, (float)scale, (float)scale);
 
                 // Sphere signed distance
                 float sphereSDF = Math::Length(pWS - sphereCenter) - radius;

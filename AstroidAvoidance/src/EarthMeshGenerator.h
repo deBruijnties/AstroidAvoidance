@@ -23,12 +23,12 @@ private:
 
     void OnStart() override;
 
-    MeshRenderer* mr;
+    MeshRenderer* mr = nullptr;
 
     // Allocate storage for the static members
     Mesh* planetMesh = nullptr;
     //MarchingCubes Planet::marchingCubes;
-    float vertexValues[gridCubes + 1][gridCubes + 1][gridCubes + 1];
+    float vertexValues[gridCubes + 1][gridCubes + 1][gridCubes + 1] = {};
 
     void innitiateVertexValues();
    

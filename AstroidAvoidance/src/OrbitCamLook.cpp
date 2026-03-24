@@ -22,7 +22,7 @@ void OrbitCamLook::OnStart()
         std::cout << "No parent set\n";
     }
 
-    //set the base rotation and set transform to update
+    // set the base rotation and set transform to update
     transform->GetParent()->localRotation = Quaternion::FromEuler(euler);
     transform->GetParent()->MarkDirty();
 }
@@ -46,7 +46,7 @@ void OrbitCamLook::OnUpdate()
         if (camPitch > 89.0f) camPitch = 89.0f;
         if (camPitch < -89.0f) camPitch = -89.0f;
 
-        //sets origon obj rotation 
+        // sets origon obj rotation 
         transform->localPosition = Vector3(0, 0, camZoom);
         // Apply rotation to the parent (orgion)
         Vector3 euler = Math::Radians(Vector3(camPitch, camYaw, 0.0f));
@@ -57,7 +57,7 @@ void OrbitCamLook::OnUpdate()
             std::cout << "No parent set\n";
         }
 
-        //set the rotation and set transform to update
+        // set the rotation and set transform to update
         transform->GetParent()->localRotation = Quaternion::FromEuler(euler);
 		transform->GetParent()->MarkDirty();
     }

@@ -102,7 +102,6 @@ void AstroidSpawner::OnStart()
     m_instanceBuffer->Allocate(m_astroids.size());
 }
 
-float TimeSinceStartGame = 0;
 void AstroidSpawner::OnUpdate()
 {
     if (hits < 3)

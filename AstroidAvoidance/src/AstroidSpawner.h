@@ -25,6 +25,8 @@ public:
     EarthMeshGenerator* earthMeshGenerator = nullptr;
     MeshRendererInstanced* meshRendererInstanced = nullptr;
 
+    float TimeSinceStartGame = 0;
+
     struct AstroidData
     {
         int id = 0;

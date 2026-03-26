@@ -102,13 +102,19 @@ void AstroidSpawner::OnStart()
     m_instanceBuffer->Allocate(m_astroids.size());
 }
 
-
+float TimeSinceStartGame = 0;
 void AstroidSpawner::OnUpdate()
 {
+    if (hits < 3)
+    {
+        TimeSinceStartGame += Time::deltaTime;
+    }
+
     if (!Started)
     {
         if (Started != Input::Input::IsAnyKeyPressed())
         {
+            TimeSinceStartGame = 0;
             Started = true;
             Renderer::SetCanvas(nullptr);
         }
@@ -205,7 +211,13 @@ void AstroidSpawner::OnUpdate()
             std::cout << "hits: " << hits << "\n";
             if (hits >= 3)
             {
+
                 Renderer::SetCanvas(gameovercanvas);
+                std::stringstream stream;
+                stream << std::fixed << std::setprecision(2) << TimeSinceStartGame;
+                std::string s = "YOU SURVIVED " + stream.str() + " SECONDS!!!!";
+                Engine::SetTitle(s.c_str());
+
             }
         }
     }

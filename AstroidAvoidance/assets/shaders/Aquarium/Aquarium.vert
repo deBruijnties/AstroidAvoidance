@@ -17,9 +17,13 @@ out vec2 vUV;
 
 void main()
 {
+    // Transform vertex to world space once (used for both position + wave calc)
     vec4 world = u_Model * vec4(aPos, 1.0);
 
     float waveHeight = 0.0;
+
+    // Only apply wave deformation to water surfice (based on UV)
+    // Avoids moving the entire mesh (e.g., water edges only)
     if (aUV.y > 0.99)
     {
         waveHeight =

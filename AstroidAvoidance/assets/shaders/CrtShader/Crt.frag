@@ -21,10 +21,9 @@ void main()
     float roughness = 0.5;
     float ao = 1.0;
     vec3 emission = vec3(0.0);
+    vec3 normal = normalize(vWorldNormal);
 
-    vec3 normal = normalize(vWorldNormal);//old
-    //normal = normalize(vTBN[2]);
-
+    // set color metall normal roughtness and emmission and ambient occlusion 
     gAlbedoMetal = vec4(albedo, metallic);
     gNormalRough = vec4(normal * 0.5 + 0.5, roughness);
     gEmissionAO  = vec4(emission, ao);
@@ -41,6 +40,7 @@ void main()
         gAlbedoMetal.rgb = screenColor;
         gNormalRough.a = 1;
 
+        // set crt screen emission rendertexture color
         gEmissionAO.rgb  = screenColor * intensity;
     }
 }

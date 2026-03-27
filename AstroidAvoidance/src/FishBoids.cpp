@@ -1,15 +1,16 @@
-﻿#include <core/Scene/Components/Transform.h>
+#include <core/Scene/Components/Transform.h>
 #include "FishBoids.h"
 #include <core/Time.h>
 #include <cstdlib>
 #include <cmath>
 
-//random float
+// Random float in range
 static float RandF(float lo, float hi)
 {
     return lo + (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) * (hi - lo);
 }
 
+// Random point inside a sphere
 static Vector3 RandInsideSphere(float radius)
 {
     Vector3 p;
@@ -19,6 +20,7 @@ static Vector3 RandInsideSphere(float radius)
     return p * radius;
 }
 
+// Clamp vector length to maxLen
 Vector3 FishBoids::ClampMagnitude(const Vector3& v, float maxLen)
 {
     float sqLen = Math::Dot(v, v);
@@ -27,27 +29,29 @@ Vector3 FishBoids::ClampMagnitude(const Vector3& v, float maxLen)
     return v;
 }
 
+// Steering force towards desired direction
 Vector3 FishBoids::Steer(const Vector3& velocity, const Vector3& desired,
     float maxSpeed, float maxForce)
 {
     float dLen = Math::Length(desired);
     if (dLen < 1e-6f) return { 0, 0, 0 };
+
     Vector3 desiredScaled = desired * (maxSpeed / dLen);
     return ClampMagnitude(desiredScaled - velocity, maxForce);
 }
 
-
+// Separation: avoid crowding nearby fish
 Vector3 FishBoids::CalcSeparation(const Fish& self) const
 {
     Vector3 steer{ 0, 0, 0 };
-    int     count = 0;
+    int count = 0;
 
     for (const auto& other : m_fish)
     {
         if (other.id == self.id) continue;
 
         Vector3 diff = self.position - other.position;
-        float   dist = Math::Length(diff);
+        float dist = Math::Length(diff);
 
         if (dist > 0.001f && dist < separationRadius)
         {
@@ -62,10 +66,11 @@ Vector3 FishBoids::CalcSeparation(const Fish& self) const
     return { 0, 0, 0 };
 }
 
+// Alignment: match velocity with neighbors
 Vector3 FishBoids::CalcAlignment(const Fish& self) const
 {
     Vector3 avgVel{ 0, 0, 0 };
-    int     count = 0;
+    int count = 0;
 
     for (const auto& other : m_fish)
     {
@@ -84,10 +89,11 @@ Vector3 FishBoids::CalcAlignment(const Fish& self) const
     return { 0, 0, 0 };
 }
 
+// Cohesion: steer towards center of nearby fish
 Vector3 FishBoids::CalcCohesion(const Fish& self) const
 {
     Vector3 center{ 0, 0, 0 };
-    int     count = 0;
+    int count = 0;
 
     for (const auto& other : m_fish)
     {
@@ -109,6 +115,7 @@ Vector3 FishBoids::CalcCohesion(const Fish& self) const
     return { 0, 0, 0 };
 }
 
+// Push fish back when near simulation bounds
 Vector3 FishBoids::CalcBoundary(const Fish& self,
     const Vector3& sMin, const Vector3& sMax,
     float margin) const
@@ -137,12 +144,12 @@ Vector3 FishBoids::CalcBoundary(const Fish& self,
     return Steer(self.velocity, steer, maxSpeed, maxSteerForce);
 }
 
-
 void FishBoids::OnStart()
 {
     m_fish.clear();
     m_fish.reserve(fishCount);
 
+    // Initialize fish with random positions and velocities
     for (int i = 0; i < fishCount; ++i)
     {
         Fish f{};
@@ -156,13 +163,16 @@ void FishBoids::OnStart()
             RandF(-0.3f, 0.3f),
             RandF(-1.f,  1.f)
         };
+
         float len = Math::Length(dir);
         if (len > 1e-6f) dir = dir / len;
+
         f.velocity = dir * RandF(minSpeed, maxSpeed);
 
         m_fish.push_back(f);
     }
 
+    // GPU instance buffer for rendering
     m_instanceBuffer = new StructuredBuffer(INSTANCE_BINDING, sizeof(Matrix4));
     m_instanceBuffer->Allocate(m_fish.size());
 }
@@ -171,16 +181,18 @@ void FishBoids::OnUpdate()
 {
     const float dt = Time::deltaTime;
 
-    Vector3    worldPos;
+    // Extract world transform
+    Vector3 worldPos;
     Quaternion worldRot;
-    Vector3    worldScale;
+    Vector3 worldScale;
     Math::DecomposeMatrix(transform->worldMatrix, worldPos, worldRot, worldScale);
 
+    // Scale simulation bounds with object
     const Vector3 scaledMin = boundsMin * worldScale;
     const Vector3 scaledMax = boundsMax * worldScale;
-    const float   scaledMargin = boundaryMargin * Math::Length(worldScale) / 1.732f;
+    const float scaledMargin = boundaryMargin * Math::Length(worldScale) / 1.732f;
 
-
+    // Precompute steering forces
     struct SteeringResult { Vector3 accel; };
     static std::vector<SteeringResult> s_steering;
     s_steering.resize(m_fish.size());
@@ -189,18 +201,24 @@ void FishBoids::OnUpdate()
     {
         Fish& f = m_fish[i];
 
+        // Wander behavior (adds randomness)
         f.wanderAngle += RandF(-1.5f, 1.5f) * dt;
+
         Vector3 forward = Math::Length(f.velocity) > 1e-6f
             ? f.velocity * (1.0f / Math::Length(f.velocity))
             : Vector3(0, 0, 1);
+
         Vector3 right = Math::Normalize(Math::Cross(forward, Vector3(0, 1, 0)));
         if (Math::Length(right) < 1e-6f)
             right = { 1, 0, 0 };
+
         Vector3 up = Math::Cross(right, forward);
+
         Vector3 wanderTarget = forward
             + right * cosf(f.wanderAngle)
             + up * sinf(f.wanderAngle);
 
+        // Combine all behaviors
         Vector3 sep = CalcSeparation(f) * separationWeight;
         Vector3 ali = CalcAlignment(f) * alignmentWeight;
         Vector3 coh = CalcCohesion(f) * cohesionWeight;
@@ -210,7 +228,7 @@ void FishBoids::OnUpdate()
         s_steering[i].accel = ClampMagnitude(sep + ali + coh + bnd + wander, maxSteerForce);
     }
 
-
+    // Integrate movement
     for (size_t i = 0; i < m_fish.size(); ++i)
     {
         Fish& f = m_fish[i];
@@ -228,20 +246,23 @@ void FishBoids::OnUpdate()
             f.velocity = f.velocity * (clamped / speed);
         }
 
+        // Bobbing motion for more natural movement
         f.phase += bobFrequency * dt;
-
         float bob = sinf(f.phase) * bobAmplitude;
+
         f.position = f.position + f.velocity * dt + Vector3(0.0f, bob * dt, 0.0f);
 
+        // Keep fish inside bounds
         f.position.x = Math::Clamp(f.position.x, scaledMin.x, scaledMax.x);
         f.position.y = Math::Clamp(f.position.y, scaledMin.y, scaledMax.y);
         f.position.z = Math::Clamp(f.position.z, scaledMin.z, scaledMax.z);
     }
 
-
+    // Ensure buffer size matches fish count
     if (m_instanceBuffer->GetCapacity() != m_fish.size())
         m_instanceBuffer->Allocate(m_fish.size());
 
+    // Upload transforms to GPU
     for (size_t i = 0; i < m_fish.size(); ++i)
     {
         Fish& f = m_fish[i];

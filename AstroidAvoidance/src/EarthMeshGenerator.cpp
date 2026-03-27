@@ -1,28 +1,24 @@
-﻿#include "EarthMeshGenerator.h"
+#include "EarthMeshGenerator.h"
 #include "TriangleTable.h"
 #include "Core/Scene/Components/MeshRenderer.h"
 #include "Core/Scene/Gameobject.h"
 #include <core/Rendering/Mesh/Mesh.h>
 #include "Core/engine.h"
 
-
 void EarthMeshGenerator::OnStart()
 {
-	mr = gameObject->getComponent<MeshRenderer>();
+    mr = gameObject->getComponent<MeshRenderer>();
     innitiateVertexValues();
-	marchingCubes();
+    marchingCubes();
 }
 
-
-
+// Initializes SDF values for a sphere in the grid
 void EarthMeshGenerator::innitiateVertexValues()
 {
-    // (gridCubes+1) samples on each axis
-    const float radius = planetSize * 0.5f; // world-space radius
+    const float radius = planetSize * 0.5f;
     const float halfGrid = (float)gridCubes * 0.5f;
     const Vector3 centerGrid(halfGrid, halfGrid, halfGrid);
 
-    // World-space center of the planet
     const Vector3 centerWS = centerGrid * Vector3(scale, scale, scale);
 
     for (int x = 0; x <= gridCubes; x++)
@@ -36,14 +32,14 @@ void EarthMeshGenerator::innitiateVertexValues()
 
                 float dist = Math::Length(pWS - centerWS);
 
-                // SDF of a sphere
+                // Signed distance to sphere surface
                 vertexValues[x][y][z] = dist - radius;
             }
         }
     }
 }
 
-// Interpolates points where SDF crosses the surface
+// Interpolates position along an edge where the surface crosses
 Vector3 InterpolateEdge(const Vector3& p1, const Vector3& p2, float valP1, float valP2)
 {
     if (std::abs(valP1 - valP2) < 0.0001f)
@@ -53,6 +49,7 @@ Vector3 InterpolateEdge(const Vector3& p1, const Vector3& p2, float valP1, float
     return Math::Lerp(p1, p2, t);
 }
 
+// Computes face normal from triangle
 Vector3 CalculateNormal(const Vector3& a, const Vector3& b, const Vector3& c)
 {
     Vector3 edge1 = b - a;
@@ -61,12 +58,14 @@ Vector3 CalculateNormal(const Vector3& a, const Vector3& b, const Vector3& c)
     return Math::Normalize(normal);
 }
 
+// Builds mesh using marching cubes over the SDF grid
 void EarthMeshGenerator::marchingCubes()
 {
     std::vector<Vector3> vertices;
     std::vector<Vector3> normals;
     std::vector<unsigned> indices;
 
+    // Used to avoid duplicate vertices
     struct Vec3Key {
         float x, y, z;
         bool operator==(const Vec3Key& o) const { return x == o.x && y == o.y && z == o.z; }
@@ -82,6 +81,7 @@ void EarthMeshGenerator::marchingCubes()
 
     std::unordered_map<Vec3Key, unsigned, Vec3KeyHash> vertexMap;
 
+    // Adds vertex if not already present
     auto addVertex = [&](const Vector3& v) -> unsigned {
         Vec3Key key{ v.x, v.y, v.z };
         auto it = vertexMap.find(key);
@@ -114,6 +114,7 @@ void EarthMeshGenerator::marchingCubes()
                 v[6] = vertexValues[x + 1][y + 1][z + 1];
                 v[7] = vertexValues[x][y + 1][z + 1];
 
+                // Build cube configuration index
                 int CubeIndex = 0;
                 if (v[0] < 0) CubeIndex |= 1;
                 if (v[1] < 0) CubeIndex |= 2;
@@ -138,6 +139,7 @@ void EarthMeshGenerator::marchingCubes()
                     Vector3((float)x,     (float)y + 1, (float)z + 1)
                 };
 
+                // Interpolated edge points
                 Vector3 E[12] = {
                     InterpolateEdge(P[0], P[1], v[0], v[1]),
                     InterpolateEdge(P[1], P[2], v[1], v[2]),
@@ -161,6 +163,7 @@ void EarthMeshGenerator::marchingCubes()
                     int bIdx = triangle_table[CubeIndex][i + 1];
                     int cIdx = triangle_table[CubeIndex][i + 2];
 
+                    // Convert from grid to world space
                     Vector3 a = (E[aIdx] - centerGrid) * Vector3(scale, scale, scale);
                     Vector3 b = (E[bIdx] - centerGrid) * Vector3(scale, scale, scale);
                     Vector3 c = (E[cIdx] - centerGrid) * Vector3(scale, scale, scale);
@@ -173,6 +176,7 @@ void EarthMeshGenerator::marchingCubes()
                     indices.push_back(ib);
                     indices.push_back(ic);
 
+                    // Accumulate normals for smooth shading
                     Vector3 faceN = CalculateNormal(a, b, c);
                     normals[ia] += faceN;
                     normals[ib] += faceN;
@@ -182,11 +186,11 @@ void EarthMeshGenerator::marchingCubes()
         }
     }
 
+    // Normalize accumulated normals
     for (int i = 0; i < normals.size(); i++)
     {
         normals[i] = Math::Normalize(vertices[i]);
         normals[i] = Math::Normalize(normals[i]);
-
     }
 
     if (planetMesh)
@@ -197,7 +201,7 @@ void EarthMeshGenerator::marchingCubes()
     mr->mesh = planetMesh;
 }
 
-//carve and regen the vertexvalues of the planet
+// Carves a spherical hole into the SDF and updates values
 void EarthMeshGenerator::carveSphereHole(const Vector3& sphereCenter, float radius)
 {
     const int size = gridCubes + 1;
@@ -208,13 +212,11 @@ void EarthMeshGenerator::carveSphereHole(const Vector3& sphereCenter, float radi
         {
             for (int z = 0; z < size; z++)
             {
-                // Convert voxel index to world space
                 Vector3 pWS = Vector3((float)x, (float)y, (float)z) * Vector3((float)scale, (float)scale, (float)scale);
 
-                // Sphere signed distance
                 float sphereSDF = Math::Length(pWS - sphereCenter) - radius;
 
-                // Subtract (carve out): push SDF toward "empty"
+                // Combine SDFs to remove volume
                 vertexValues[x][y][z] = std::max(vertexValues[x][y][z], -sphereSDF);
             }
         }

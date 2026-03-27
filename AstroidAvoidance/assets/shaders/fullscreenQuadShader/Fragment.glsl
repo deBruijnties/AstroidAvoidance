@@ -6,8 +6,6 @@ in vec2 TexCoord;
 
 uniform sampler2D Tex;
 
-
-
 void main()
 {
     // Load G-buffer textures

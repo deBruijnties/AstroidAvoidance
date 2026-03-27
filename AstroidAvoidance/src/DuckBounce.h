@@ -4,6 +4,7 @@
 class DuckBounce : public Component
 {
 public:
+    // update each frame
     void OnUpdate() override;
 };
 

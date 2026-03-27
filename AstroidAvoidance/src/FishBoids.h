@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <core/Scene/Component.h>
 #include <core/Rendering/Buffers/StructuredBuffer.h>
 #include <core/Scene/Components/MeshRendererInstanced.h>

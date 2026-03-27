@@ -1,17 +1,11 @@
 #version 430 core
 
 layout(location = 0) in vec3 aPos;
-layout(location = 1) in vec3 aNormal;
-layout(location = 3) in vec2 aUV;
 
 uniform mat4 u_View;
 uniform mat4 u_Projection;
 
-out vec3 vWorldPos;
-out vec3 vWorldNormal;
-out vec3 vLocalNormal;
-out vec2 vUV;
-
+// model matrix of current index
 layout(std430, binding = 12) readonly buffer InstanceMatrices
 {
     mat4 models[];
@@ -21,7 +15,6 @@ void main()
 {
     mat4 u_Model = models[gl_InstanceID];
     vec3 worldPos = u_Model[3].xyz;
-    vUV = aUV;
 
     vec4 clip = u_Projection * u_View * vec4(worldPos, 1.0);
 

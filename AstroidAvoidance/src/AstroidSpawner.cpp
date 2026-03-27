@@ -7,13 +7,14 @@
 #include <core/Rendering/Renderer.h>
 #include <cstdlib>
 
-
+// Returns a random float in [min, max]
 static float RandRange(float min, float max)
 {
     float t = float(rand()) / float(RAND_MAX);
     return min + t * (max - min);
 }
 
+// Generates a uniformly distributed random direction on a sphere
 static Vector3 RandomDirectionSphere()
 {
     float u = float(rand()) / float(RAND_MAX);
@@ -29,6 +30,7 @@ static Vector3 RandomDirectionSphere()
     };
 }
 
+// Creates a randomized asteroid with orbital + rotation properties
 AstroidSpawner::AstroidData AstroidSpawner::createRandomAstroid()
 {
     AstroidData a{};
@@ -54,21 +56,22 @@ AstroidSpawner::AstroidData AstroidSpawner::createRandomAstroid()
         RandRange(-90.0f, 90.0f)
     };
 
+    // Initial orbit position in local ellipse space
     Vector3 orbitPos(
         a.orbitRadius * (1.0f - a.eccentricity),
         0.0f,
         a.orbitRadius * a.eccentricity
     );
 
-    Matrix4 rot =
-        Math::Rotate(a.orbitAngle, a.orbitAxis);
-
+    // Rotate orbit into world space
+    Matrix4 rot = Math::Rotate(a.orbitAngle, a.orbitAxis);
     Vector4 rotated = (rot * Vector4(orbitPos.x, orbitPos.y, orbitPos.z, 1.0f));
 
     a.position = Vector3(rotated.x, rotated.y, rotated.z);
     return a;
 }
 
+// Simple sphere collision check between asteroid and planet
 bool AstroidSpawner::checkCollision(AstroidData& astroid)
 {
     float astroidSize = 30 * astroid.size;
@@ -76,22 +79,16 @@ bool AstroidSpawner::checkCollision(AstroidData& astroid)
 
     float distanceBetween = Math::Length(astroid.position) - astroidSize / 2 - planetSize / 2;
 
-
-    if (distanceBetween <= 0)
-    {
-        return true;
-
-    }
-
-    return false;
+    return distanceBetween <= 0;
 }
 
+// Initialize asteroid system and GPU instance buffer
 void AstroidSpawner::OnStart()
 {
     m_astroids.clear();
     m_astroids.reserve(256);
 
-    // Start with very few
+    // Start with very few asteroids
     for (int i = 0; i < 2; ++i)
         m_astroids.push_back(createRandomAstroid());
 
@@ -102,13 +99,13 @@ void AstroidSpawner::OnStart()
     m_instanceBuffer->Allocate(m_astroids.size());
 }
 
+// Main update loop: spawning, simulation, collision, rendering
 void AstroidSpawner::OnUpdate()
 {
     if (hits < 3)
-    {
         TimeSinceStartGame += Time::deltaTime;
-    }
 
+    // Wait for player input before starting
     if (!Started)
     {
         if (Started != Input::Input::IsAnyKeyPressed())
@@ -122,28 +119,23 @@ void AstroidSpawner::OnUpdate()
 
     m_elapsed += Time::deltaTime;
 
-    // 0 - 1 over ramp time
+    // Difficulty ramp (quadratic ease-in)
     float t = Math::Clamp(m_elapsed / m_rampUpTime, 0.0f, 1.0f);
-
-    // Smooth curve (ease-in)
     float curve = t * t;
 
-    // asteroids ExspectedFount
     float targetAsteroids = Math::Lerp(m_minAsteroids, m_maxAsteroids, curve);
-
-    // Spawn speed also ramps
     float spawnRate = Math::Lerp(m_spawnPerSecondMin, m_spawnPerSecondMax, curve);
 
     m_spawnAccumulator += spawnRate * Time::deltaTime;
 
+    // Spawn new asteroids based on accumulated rate
     while (m_spawnAccumulator >= 1.0f && m_astroids.size() < (size_t)targetAsteroids)
     {
         m_astroids.push_back(createRandomAstroid());
         m_spawnAccumulator -= 1.0f;
     }
 
-
-    // Simulate
+    // Simulate asteroid movement
     for (auto& a : m_astroids)
     {
         a.orbitAngle += a.orbitSpeed * Time::deltaTime;
@@ -158,19 +150,21 @@ void AstroidSpawner::OnUpdate()
             a.orbitRadius * a.eccentricity
         );
 
-        Matrix4 rot =
-            Math::Rotate(a.orbitAngle, a.orbitAxis);
+        Matrix4 rot = Math::Rotate(a.orbitAngle, a.orbitAxis);
         a.rotation += a.angularVelocity * Time::deltaTime;
 
         Vector4 rotated = rot * Vector4(orbitPos.x, orbitPos.y, orbitPos.z, 1.0f);
         a.position = Vector3(rotated.x, rotated.y, rotated.z);
 
+        // Keep rotation within [0, 360]
         a.rotation = Math::Mod(a.rotation, Vector3(360.0f, 360.0f, 360.0f));
     }
 
+    // Resize instance buffer if needed
     if (m_instanceBuffer->GetCapacity() != m_astroids.size())
         m_instanceBuffer->Allocate(m_astroids.size());
 
+    // Upload transform matrices for instanced rendering
     for (size_t i = 0; i < m_astroids.size(); ++i)
     {
         const auto& a = m_astroids[i];
@@ -180,15 +174,17 @@ void AstroidSpawner::OnUpdate()
         m = Math::Rotate(m, Quaternion::FromEuler(Math::Radians(a.rotation)));
         m = Math::Scale(m, Vector3(a.size, a.size, a.size));
 
-
         m_instanceBuffer->Set(i, m);
     }
+
+    // Collision + destruction (reverse loop for safe removal)
     for (int i = (int)m_astroids.size() - 1; i >= 0; --i)
     {
         AstroidData& a = m_astroids[i];
 
         if (checkCollision(a))
         {
+            // Convert grid center to world space
             const float halfGrid = (float)earthMeshGenerator->gridCubes * 0.5f;
             const Vector3 centerGrid(halfGrid, halfGrid, halfGrid);
             const Vector3 centerWS = centerGrid * Vector3(
@@ -197,37 +193,41 @@ void AstroidSpawner::OnUpdate()
                 earthMeshGenerator->scale
             );
 
+            // Carve impact + update mesh
             earthMeshGenerator->carveSphereHole(centerWS + a.position, a.size * 25);
             earthMeshGenerator->marchingCubes();
 
+            // Spawn particles
             ps->baseSize = a.size;
             ps->Burst(15, a.position);
 
-            // swap-remove
+            // Remove asteroid (swap-remove)
             m_astroids[i] = m_astroids.back();
             m_astroids.pop_back();
+
             hits++;
             std::cout << "hits: " << hits << "\n";
+
+            // Game over condition
             if (hits >= 3)
             {
-
                 Renderer::SetCanvas(gameovercanvas);
+
                 std::stringstream stream;
                 stream << std::fixed << std::setprecision(2) << TimeSinceStartGame;
                 std::string s = "YOU SURVIVED " + stream.str() + " SECONDS!!!!";
                 Engine::SetTitle(s.c_str());
-
             }
         }
     }
 
-
     m_instanceBuffer->Upload();
 
-    if(meshRendererInstanced != nullptr)
-	    meshRendererInstanced->instanceBuffer = m_instanceBuffer;
+    if (meshRendererInstanced != nullptr)
+        meshRendererInstanced->instanceBuffer = m_instanceBuffer;
 }
 
+// Removes an asteroid by ID
 void AstroidSpawner::DestroyAstroid(AstroidData& astroid)
 {
     m_astroids.erase(
@@ -237,24 +237,23 @@ void AstroidSpawner::DestroyAstroid(AstroidData& astroid)
             [&](const AstroidData& a) { return a.id == astroid.id; }
         ),
         m_astroids.end()
-	);
+    );
 }
 
+// Predicts future positions (1 step per second)
 std::vector<Vector3> AstroidSpawner::PredictFuturePosition(
     AstroidData& astroid,
     int secondsAhead)
 {
-	std::vector<Vector3> positions;
+    std::vector<Vector3> positions;
     positions.reserve(secondsAhead);
 
-	AstroidData a = astroid;
-
+    AstroidData a = astroid;
     float dt = 1;
 
-
+    // simulate with a deltatime of 1  
     for (size_t i = 0; i < secondsAhead; i++)
     {
-
         a.orbitAngle += a.orbitSpeed * dt;
         a.orbitRadius -= a.radialSpeed * dt;
 
@@ -267,8 +266,7 @@ std::vector<Vector3> AstroidSpawner::PredictFuturePosition(
             a.orbitRadius * a.eccentricity
         );
 
-        Matrix4 rot =
-            Math::Rotate( a.orbitAngle, a.orbitAxis);
+        Matrix4 rot = Math::Rotate(a.orbitAngle, a.orbitAxis);
         a.rotation += a.angularVelocity * dt;
 
         Vector4 Rotated = rot * Vector4(orbitPos.x, orbitPos.y, orbitPos.z, 1.0f);
@@ -276,8 +274,7 @@ std::vector<Vector3> AstroidSpawner::PredictFuturePosition(
 
         a.rotation = Math::Mod(a.rotation, Vector3(360.0f, 360.0f, 360.0f));
 
-		positions.push_back(a.position);
+        positions.push_back(a.position);
     }
-	return positions;
-
+    return positions;
 }

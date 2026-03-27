@@ -11,6 +11,7 @@ this game is my submission for my application for BUas Creative Media and Game T
 - [Assets Attribution](#assets-attributions)
 - [Learning Sources](#learning-sources)
 - [Story Lore](#story-lore)
+- [Decor and level building](#decor-and-level-building)
 
 ## How to Play
 you are a asteroid safety mannager, your job is to select astoids and destroy them, so the planet doesnt get destroyed. you do this by selecting a astroid and destroying it before it impacts earth
@@ -20,8 +21,8 @@ you are a asteroid safety mannager, your job is to select astoids and destroy th
 |-------------------|-------------------------------|
 | Select asteroid   | L Mouse Button                |
 | Destroy asteroid  | Space                         |
-| Look              | R Mouse Button + Mouse move   |
-| Pause             | ESC                           |
+| Look around       | R Mouse Button + Mouse move   |
+| close game        | ESC                           |
 
 ## Build Instructions
 The project compiles using **Visual Studio Community 2026**.
@@ -84,7 +85,7 @@ I use STB_IMAGE for loading images into the game like .png files
 - [Loading 3d models](https://learnopengl.com/Model-Loading/Assimp)
 - [Dithering](https://shader-tutorial.dev/advanced/color-banding-dithering/?utm_source=chatgpt.com)
 - [boids](https://www.youtube.com/watch?v=bqtqltqcQhw)
-
+- [bloom](https://learnopengl.com/Advanced-Lighting/Bloom)
 
 ## Story Lore
 you are at work in your office at FISH office (Fast Interception & Space Hazard-avoidance) the game views are on 2 screens. One you see the planet with the asteroids around it. on the other you see info about the asteroid selected in the main view. you also have a button you can press and that will blowup that asteroid.
